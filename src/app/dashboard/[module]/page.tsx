@@ -5,15 +5,15 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { getModuleBySlug, routes } from '@/lib/routes/routes';
 
 type ModulePageProps = {
-  params: {
+  params: Promise<{
     module: string;
-  };
+  }>;
 };
 
 export default async function ModulePlaceholderPage({
   params,
 }: ModulePageProps) {
-  const { module } = params;
+  const { module } = await params;
   const current = getModuleBySlug(module);
 
   if (!current) {

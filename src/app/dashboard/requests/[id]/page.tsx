@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -27,9 +27,9 @@ import type { RequestRecord } from '@/features/requests/requests.types';
 import { routes } from '@/lib/routes/routes';
 
 type RequestDetailPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 const formatDate = (value: string | null) => {
@@ -77,6 +77,7 @@ const RequestField = ({
 export default function RequestDetailPage({
   params,
 }: RequestDetailPageProps) {
+  const resolvedParams = use(params);
   const [request, setRequest] = useState<RequestRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -90,7 +91,7 @@ export default function RequestDetailPage({
       setError(null);
 
       try {
-        const data = await getRequestById(params.id);
+        const data = await getRequestById(resolvedParams.id);
 
         if (!active) {
           return;
@@ -120,7 +121,7 @@ export default function RequestDetailPage({
     return () => {
       active = false;
     };
-  }, [params.id, refreshTick]);
+  }, [resolvedParams.id, refreshTick]);
 
   const handleRefresh = () => {
     setRefreshTick((value) => value + 1);

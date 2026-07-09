@@ -109,7 +109,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
               onClick={(event) => setAnchorEl(event.currentTarget)}
               startIcon={
                 <Avatar sx={{ width: 28, height: 28, bgcolor: '#0f172a', color: '#ffffff', fontSize: 13, fontWeight: 700 }}>
-                  {user.name.slice(0, 1).toUpperCase()}
+                  {(user.name || user.email || 'A').slice(0, 1).toUpperCase()}
                 </Avatar>
               }
               variant="text"
@@ -117,7 +117,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
             >
               <Stack spacing={0} alignItems="flex-start" sx={{ mr: 1, ml: 1 }}>
                 <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1.2 }}>
-                  {user.name}
+                  {user.name || user.email.split('@')[0]}
                 </Typography>
                 <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
                   {user.role}

@@ -26,7 +26,7 @@ Standalone Next.js admin dashboard foundation for SupplyHub.
 
 ## Scope
 
-This phase provides the initial admin shell, authenticated login flow, dashboard foundation, API client wrapper, and auth guards.
+This phase provides the initial admin shell, authenticated login flow, dashboard foundation, API client wrapper, auth guards, and the first Requests module.
 
 It does not yet implement:
 
@@ -50,4 +50,4 @@ It does not yet implement:
 
 ## Next Step
 
-Phase 17.2 will wire the first real admin module against authenticated API requests.
+Phase 17.3 will extend the authenticated admin area with the next workflow module.

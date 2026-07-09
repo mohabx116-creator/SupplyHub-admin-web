@@ -30,7 +30,7 @@ type AppSidebarProps = {
 
 const navItems = [
   { label: 'Dashboard', href: routes.dashboard, icon: DashboardOutlinedIcon },
-  { label: 'Requests', href: getModuleRoute('requests'), icon: RequestPageOutlinedIcon },
+  { label: 'Requests', href: routes.requests, icon: RequestPageOutlinedIcon },
   { label: 'Suppliers', href: getModuleRoute('suppliers'), icon: StorefrontOutlinedIcon },
   { label: 'Quotations', href: getModuleRoute('quotations'), icon: ViewListOutlinedIcon },
   { label: 'Orders', href: getModuleRoute('orders'), icon: ShoppingCartOutlinedIcon },

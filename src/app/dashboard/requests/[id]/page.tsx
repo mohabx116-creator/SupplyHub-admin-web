@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import {
+  Box,
   Button,
   Card,
   CardContent,
+  Chip,
   Divider,
   Grid,
   Skeleton,
@@ -44,15 +46,29 @@ const formatDate = (value: string | null) => {
 const RequestField = ({
   label,
   value,
+  mono = false,
 }: {
   label: string;
   value: string;
+  mono?: boolean;
 }) => (
   <Stack spacing={0.5}>
-    <Typography variant="caption" color="text.secondary">
+    <Typography
+      variant="caption"
+      color="text.secondary"
+      sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}
+    >
       {label}
     </Typography>
-    <Typography variant="body2" sx={{ fontWeight: 700 }}>
+    <Typography
+      variant="body2"
+      sx={{
+        fontWeight: 700,
+        color: '#0f172a',
+        fontFamily: mono ? 'monospace' : 'inherit',
+        letterSpacing: mono ? '0.03em' : 'inherit',
+      }}
+    >
       {value}
     </Typography>
   </Stack>
@@ -165,11 +181,9 @@ export default function RequestDetailPage({
                   <RequestStatusChip status={request.status} />
                 </Stack>
 
-                <Divider />
-
-                <Grid container spacing={2.5}>
+                <Divider />                <Grid container spacing={2.5}>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
-                    <RequestField label="Request ID" value={request.id} />
+                    <RequestField label="Request ID" value={request.id} mono />
                   </Grid>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
                     <RequestField label="Status" value={request.status} />
@@ -178,18 +192,21 @@ export default function RequestDetailPage({
                     <RequestField
                       label="Needed by"
                       value={formatDate(request.neededByDate)}
+                      mono
                     />
                   </Grid>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
                     <RequestField
                       label="Created"
                       value={formatDate(request.createdAt)}
+                      mono
                     />
                   </Grid>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
                     <RequestField
                       label="Updated"
                       value={formatDate(request.updatedAt)}
+                      mono
                     />
                   </Grid>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
@@ -208,6 +225,7 @@ export default function RequestDetailPage({
                     <RequestField
                       label="Item count"
                       value={String(request.items.length)}
+                      mono
                     />
                   </Grid>
                 </Grid>
@@ -217,10 +235,11 @@ export default function RequestDetailPage({
 
           <Grid container spacing={3}>
             <Grid size={{ xs: 12, lg: 6 }}>
-              <Card sx={{ height: '100%' }}>
-                <CardContent>
-                  <Stack spacing={2}>
-                    <Typography variant="h6">Company</Typography>
+              <Card sx={{ height: '100%', borderColor: 'divider' }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Stack spacing={2.5}>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>Company Info</Typography>
+                    <Divider sx={{ borderColor: 'divider' }} />
                     <RequestField label="Name" value={request.company.name} />
                     <RequestField label="Status" value={request.company.status} />
                     <RequestField
@@ -230,6 +249,7 @@ export default function RequestDetailPage({
                     <RequestField
                       label="Phone"
                       value={request.company.phone ?? '—'}
+                      mono
                     />
                     <RequestField
                       label="City"
@@ -240,10 +260,11 @@ export default function RequestDetailPage({
               </Card>
             </Grid>
             <Grid size={{ xs: 12, lg: 6 }}>
-              <Card sx={{ height: '100%' }}>
-                <CardContent>
-                  <Stack spacing={2}>
-                    <Typography variant="h6">Requested by</Typography>
+              <Card sx={{ height: '100%', borderColor: 'divider' }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Stack spacing={2.5}>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>Requested By</Typography>
+                    <Divider sx={{ borderColor: 'divider' }} />
                     <RequestField
                       label="Name"
                       value={request.requestedBy.name}
@@ -260,6 +281,7 @@ export default function RequestDetailPage({
                     <RequestField
                       label="Company ID"
                       value={request.requestedBy.companyId ?? '—'}
+                      mono
                     />
                   </Stack>
                 </CardContent>
@@ -267,20 +289,20 @@ export default function RequestDetailPage({
             </Grid>
           </Grid>
 
-          <Card>
-            <CardContent>
-              <Stack spacing={2}>
-                <Typography variant="h6">Items</Typography>
-                <TableContainer>
+          <Card sx={{ borderColor: 'divider' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Stack spacing={2.5}>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>Items Registry</Typography>
+                <TableContainer sx={{ border: '1px solid #e2e8f0', borderRadius: 1 }}>
                   <Table size="small">
                     <TableHead>
                       <TableRow>
                         <TableCell>Item</TableCell>
                         <TableCell>Description</TableCell>
-                        <TableCell>Qty</TableCell>
+                        <TableCell align="right">Qty</TableCell>
                         <TableCell>Unit</TableCell>
                         <TableCell>Brand</TableCell>
-                        <TableCell>Budget</TableCell>
+                        <TableCell align="right">Budget</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -290,20 +312,20 @@ export default function RequestDetailPage({
                             <Stack spacing={0.25}>
                               <Typography
                                 variant="body2"
-                                sx={{ fontWeight: 700 }}
+                                sx={{ fontWeight: 700, color: '#0f172a' }}
                               >
                                 {item.name}
                               </Typography>
-                              <Typography variant="caption" color="text.secondary">
+                              <Typography variant="caption" sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
                                 {item.id}
                               </Typography>
                             </Stack>
                           </TableCell>
                           <TableCell>{item.description ?? '—'}</TableCell>
-                          <TableCell>{item.quantity}</TableCell>
-                          <TableCell>{item.unit}</TableCell>
+                          <TableCell align="right" sx={{ fontFamily: 'monospace', fontWeight: 600, color: '#0f172a' }}>{item.quantity}</TableCell>
+                          <TableCell sx={{ fontWeight: 500 }}>{item.unit}</TableCell>
                           <TableCell>{item.preferredBrand ?? '—'}</TableCell>
-                          <TableCell>{item.estimatedBudget ?? '—'}</TableCell>
+                          <TableCell align="right" sx={{ fontFamily: 'monospace', fontWeight: 600, color: '#0f172a' }}>{item.estimatedBudget ?? '—'}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -313,12 +335,52 @@ export default function RequestDetailPage({
             </CardContent>
           </Card>
 
+          {/* Activity / Timeline Placeholder */}
+          <Card sx={{ borderColor: 'divider' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Stack spacing={2.5}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                  <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                    Request Activity History
+                  </Typography>
+                  <Chip label="Demo Logs Only" size="small" sx={{ bgcolor: '#fef3c7', color: '#b45309', fontWeight: 600, borderRadius: 0.5 }} />
+                </Stack>
+                <Divider sx={{ borderColor: 'divider' }} />
+                <Stack spacing={2}>
+                  {[
+                    { title: 'Request Converted to Sourcing', desc: 'Sourcing manager assigned the RFQ to qualified vendor pool.', time: 'July 10, 2026 10:15 AM' },
+                    { title: 'Needs Review Flag Cleared', desc: 'Admin cleared flag after verifying delivery coordinates.', time: 'July 09, 2026 04:30 PM' },
+                    { title: 'Request Created', desc: 'Initial payload received from API gateway.', time: 'July 09, 2026 09:12 AM' },
+                  ].map((log, idx) => (
+                    <Box key={idx}>
+                      {idx > 0 && <Divider sx={{ my: 1.5 }} />}
+                      <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 700, color: '#0f172a' }}>
+                            {log.title}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+                            {log.desc}
+                          </Typography>
+                        </Box>
+                        <Typography variant="caption" sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
+                          {log.time}
+                        </Typography>
+                      </Stack>
+                    </Box>
+                  ))}
+                </Stack>
+              </Stack>
+            </CardContent>
+          </Card>
+
           {request.internalNotes ? (
-            <Card>
-              <CardContent>
+            <Card sx={{ borderColor: 'divider' }}>
+              <CardContent sx={{ p: 3 }}>
                 <Stack spacing={1.5}>
-                  <Typography variant="h6">Internal notes</Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="h6" sx={{ fontWeight: 700 }}>Internal Notes</Typography>
+                  <Divider sx={{ borderColor: 'divider' }} />
+                  <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.5 }}>
                     {request.internalNotes}
                   </Typography>
                 </Stack>

@@ -38,7 +38,7 @@ export function RequestsTable({ requests }: RequestsTableProps) {
   const router = useRouter();
 
   return (
-    <Card sx={{ overflow: 'hidden' }}>
+    <Card sx={{ overflow: 'hidden', border: '1px solid #e2e8f0', borderRadius: 1 }}>
       <TableContainer>
         <Table>
           <TableHead>
@@ -58,14 +58,27 @@ export function RequestsTable({ requests }: RequestsTableProps) {
                 key={request.id}
                 hover
                 onClick={() => router.push(getRequestRoute(request.id))}
-                sx={{ cursor: 'pointer' }}
+                sx={{
+                  cursor: 'pointer',
+                  transition: 'background-color 0.15s ease',
+                  '&:hover': {
+                    bgcolor: 'rgba(15, 23, 42, 0.02) !important',
+                  },
+                }}
               >
                 <TableCell>
                   <Stack spacing={0.5}>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 800 }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#0f172a' }}>
                       {request.title}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        fontFamily: 'monospace',
+                        color: 'text.secondary',
+                        letterSpacing: '0.05em',
+                      }}
+                    >
                       {shortId(request.id)}
                     </Typography>
                   </Stack>
@@ -75,7 +88,7 @@ export function RequestsTable({ requests }: RequestsTableProps) {
                 </TableCell>
                 <TableCell>
                   <Stack spacing={0.25}>
-                    <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 600, color: '#0f172a' }}>
                       {request.company.name}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -85,7 +98,7 @@ export function RequestsTable({ requests }: RequestsTableProps) {
                 </TableCell>
                 <TableCell>
                   <Stack spacing={0.25}>
-                    <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 600, color: '#0f172a' }}>
                       {request.requestedBy.name}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -93,9 +106,15 @@ export function RequestsTable({ requests }: RequestsTableProps) {
                     </Typography>
                   </Stack>
                 </TableCell>
-                <TableCell align="right">{request.items.length}</TableCell>
-                <TableCell>{formatDate(request.createdAt)}</TableCell>
-                <TableCell>{formatDate(request.updatedAt)}</TableCell>
+                <TableCell align="right" sx={{ fontFamily: 'monospace', fontWeight: 600, color: '#0f172a' }}>
+                  {request.items.length}
+                </TableCell>
+                <TableCell sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'text.secondary' }}>
+                  {formatDate(request.createdAt)}
+                </TableCell>
+                <TableCell sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'text.secondary' }}>
+                  {formatDate(request.updatedAt)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

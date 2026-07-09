@@ -45,22 +45,36 @@ export function AppSidebar({ mobileOpen, onMobileClose }: AppSidebarProps) {
   const pathname = usePathname();
 
   const drawerContent = (
-    <Stack sx={{ height: '100%', p: 3, gap: 3 }}>
-      <Box>
-        <Typography variant="overline" color="text.secondary">
-          SupplyHub
-        </Typography>
-        <Typography variant="h5" sx={{ fontWeight: 800, letterSpacing: '-0.03em' }}>
-          Admin Web
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-          Enterprise dashboard foundation for staging and internal operations.
-        </Typography>
-      </Box>
+    <Stack sx={{ height: '100%', p: 3, gap: 3, bgcolor: '#0f172a', color: '#f1f5f9' }}>
+      <Stack direction="row" spacing={2} alignItems="center">
+        <Box
+          sx={{
+            width: 40,
+            height: 40,
+            borderRadius: 1,
+            display: 'grid',
+            placeItems: 'center',
+            background: '#f59e0b',
+            color: '#0f172a',
+            fontWeight: 800,
+            fontSize: '1.2rem',
+          }}
+        >
+          SH
+        </Box>
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 800, letterSpacing: '0.05em', color: '#ffffff', lineHeight: 1.1 }}>
+            SUPPLYHUB
+          </Typography>
+          <Typography variant="caption" sx={{ color: '#94a3b8', fontWeight: 600 }}>
+            Procurement Portal
+          </Typography>
+        </Box>
+      </Stack>
 
-      <Divider />
+      <Divider sx={{ borderColor: '#1e293b' }} />
 
-      <List disablePadding sx={{ display: 'grid', gap: 0.5 }}>
+      <List disablePadding sx={{ display: 'grid', gap: 0.75 }}>
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = pathname === item.href;
@@ -73,21 +87,29 @@ export function AppSidebar({ mobileOpen, onMobileClose }: AppSidebarProps) {
               selected={active}
               onClick={onMobileClose}
               sx={{
-                borderRadius: 3,
+                borderRadius: 1,
                 px: 2,
                 py: 1.25,
+                color: active ? '#ffffff' : '#94a3b8',
+                borderLeft: active ? '4px solid #f59e0b' : '4px solid transparent',
+                backgroundColor: active ? 'rgba(255, 255, 255, 0.06) !important' : 'transparent',
                 '&.Mui-selected': {
-                  bgcolor: 'var(--brand-soft)',
-                  '&:hover': { bgcolor: 'var(--brand-soft)' },
+                  bgcolor: 'rgba(255, 255, 255, 0.06)',
+                  '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.08)' },
+                },
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.04)',
+                  color: '#ffffff',
+                  '& .MuiListItemIcon-root': { color: '#ffffff' },
                 },
               }}
             >
-              <ListItemIcon sx={{ minWidth: 40, color: active ? 'primary.main' : 'text.secondary' }}>
+              <ListItemIcon sx={{ minWidth: 36, color: active ? '#f59e0b' : '#94a3b8' }}>
                 <Icon fontSize="small" />
               </ListItemIcon>
               <ListItemText
                 primary={item.label}
-                primaryTypographyProps={{ fontWeight: 700 }}
+                primaryTypographyProps={{ fontWeight: active ? 700 : 500, fontSize: '0.875rem' }}
               />
             </ListItemButton>
           );
@@ -97,17 +119,17 @@ export function AppSidebar({ mobileOpen, onMobileClose }: AppSidebarProps) {
       <Box
         sx={{
           mt: 'auto',
-          p: 2,
-          borderRadius: 3,
-          background: 'linear-gradient(135deg, var(--brand-soft), rgba(255,255,255,0.9))',
-          border: '1px solid var(--border)',
+          p: 2.5,
+          borderRadius: 1,
+          bgcolor: '#1e293b',
+          border: '1px solid #334155',
         }}
       >
-        <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-          Phase 17.1
+        <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#ffffff' }}>
+          SupplyHub Operations
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          Auth is wired. The next phase will focus on the first live admin modules and mutations.
+        <Typography variant="caption" sx={{ color: '#94a3b8', mt: 0.5, display: 'block', lineHeight: 1.4 }}>
+          Visual identity aligned with Stitch design guidelines. All active requests and authentication routes are live.
         </Typography>
       </Box>
     </Stack>
@@ -122,7 +144,7 @@ export function AppSidebar({ mobileOpen, onMobileClose }: AppSidebarProps) {
         ModalProps={{ keepMounted: true }}
         sx={{
           display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box' },
+          '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box', border: 'none' },
         }}
       >
         {drawerContent}
@@ -135,9 +157,8 @@ export function AppSidebar({ mobileOpen, onMobileClose }: AppSidebarProps) {
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
-            borderLeft: '1px solid var(--border)',
-            background:
-              'linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(245,248,252,0.98) 100%)',
+            border: 'none',
+            background: '#0f172a',
           },
         }}
       >

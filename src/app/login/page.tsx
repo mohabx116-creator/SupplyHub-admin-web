@@ -70,72 +70,187 @@ function LoginForm() {
     <Box
       sx={{
         minHeight: '100dvh',
-        display: 'grid',
-        placeItems: 'center',
-        px: 2,
-        py: 6,
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
+        bgcolor: '#f8fafc',
       }}
     >
-      <Card
+      {/* Brand Banner Panel */}
+      <Box
         sx={{
-          width: '100%',
-          maxWidth: 520,
-          borderRadius: 5,
-          background: 'rgba(255,255,255,0.88)',
-          backdropFilter: 'blur(18px)',
+          display: { xs: 'none', md: 'flex' },
+          width: '40%',
+          bgcolor: '#0f172a',
+          color: '#ffffff',
+          p: 6,
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
-        <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
-          <Stack spacing={3}>
-            <Box>
-              <Typography variant="overline" color="text.secondary">
-                SupplyHub Admin
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                Sign in to SupplyHub
-              </Typography>
-              <Typography color="text.secondary" sx={{ mt: 1 }}>
-                Use your admin account to access the dashboard and authenticate
-                against the live SupplyHub API.
-              </Typography>
+        <Stack spacing={2} sx={{ zIndex: 2 }}>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Box
+              sx={{
+                width: 44,
+                height: 44,
+                borderRadius: 1,
+                display: 'grid',
+                placeItems: 'center',
+                background: '#f59e0b',
+                color: '#0f172a',
+                fontWeight: 800,
+                fontSize: '1.3rem',
+              }}
+            >
+              SH
             </Box>
-
-            <Stack component="form" spacing={2.5} onSubmit={handleSubmit}>
-              <TextField
-                label="Email"
-                type="email"
-                name="email"
-                autoComplete="email"
-                fullWidth
-                required
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-              />
-              <TextField
-                label="Password"
-                type="password"
-                name="password"
-                autoComplete="current-password"
-                fullWidth
-                required
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                size="large"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Signing in...' : 'Sign in'}
-              </Button>
-            </Stack>
-
-            {error ? <Alert severity="error">{error}</Alert> : null}
-
+            <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: '0.05em' }}>
+              SUPPLYHUB
+            </Typography>
           </Stack>
-        </CardContent>
-      </Card>
+          
+          <Box sx={{ mt: 10 }}>
+            <Typography variant="h3" sx={{ fontWeight: 700, mb: 2, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
+              Procurement Operations Command
+            </Typography>
+            <Typography variant="body1" sx={{ color: '#94a3b8', lineHeight: 1.6, fontSize: '1.05rem' }}>
+              Review requests, coordinate with qualified suppliers, manage quotations, and verify purchase orders in a secure internal environment.
+            </Typography>
+          </Box>
+        </Stack>
+
+        <Box sx={{ zIndex: 2 }}>
+          <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600 }}>
+            Staging Environment • Phase 17.3 Visual System
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Login Card Panel */}
+      <Box
+        sx={{
+          flex: 1,
+          display: 'grid',
+          placeItems: 'center',
+          px: { xs: 2, sm: 4 },
+          py: 6,
+        }}
+      >
+        <Card
+          sx={{
+            width: '100%',
+            maxWidth: 460,
+            borderRadius: 1,
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05)',
+            bgcolor: '#ffffff',
+            border: '1px solid #e2e8f0',
+          }}
+        >
+          <CardContent sx={{ p: { xs: 4, sm: 5 } }}>
+            <Stack spacing={4}>
+              <Box>
+                {/* Mobile logo header */}
+                <Stack
+                  direction="row"
+                  spacing={1.5}
+                  alignItems="center"
+                  sx={{ display: { xs: 'flex', md: 'none' }, mb: 3 }}
+                >
+                  <Box
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 1,
+                      display: 'grid',
+                      placeItems: 'center',
+                      background: '#f59e0b',
+                      color: '#0f172a',
+                      fontWeight: 800,
+                    }}
+                  >
+                    SH
+                  </Box>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 800, letterSpacing: '0.05em', color: '#0f172a' }}>
+                    SUPPLYHUB
+                  </Typography>
+                </Stack>
+
+                <Typography variant="overline" color="text.secondary" sx={{ fontWeight: 600, letterSpacing: '0.05em' }}>
+                  Secure Access
+                </Typography>
+                <Typography variant="h4" sx={{ fontWeight: 700, mt: 0.5, letterSpacing: '-0.02em', color: '#0f172a' }}>
+                  Sign In
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1, lineHeight: 1.5 }}>
+                  Use your credentials to authenticate against the live admin operations service.
+                </Typography>
+              </Box>
+
+              <Stack component="form" spacing={3} onSubmit={handleSubmit}>
+                <TextField
+                  label="Email Address"
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  fullWidth
+                  required
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  InputLabelProps={{ sx: { fontWeight: 500 } }}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      '&:hover fieldset': {
+                        borderColor: '#0f172a',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#f59e0b',
+                      },
+                    },
+                  }}
+                />
+                <TextField
+                  label="Password"
+                  type="password"
+                  name="password"
+                  autoComplete="current-password"
+                  fullWidth
+                  required
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  InputLabelProps={{ sx: { fontWeight: 500 } }}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      '&:hover fieldset': {
+                        borderColor: '#0f172a',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#f59e0b',
+                      },
+                    },
+                  }}
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  size="large"
+                  disabled={isSubmitting}
+                  sx={{ py: 1.5, fontSize: '0.95rem' }}
+                >
+                  {isSubmitting ? 'Signing in...' : 'Sign In'}
+                </Button>
+              </Stack>
+
+              {error ? (
+                <Alert severity="error" sx={{ borderRadius: 1, fontWeight: 500 }}>
+                  {error}
+                </Alert>
+              ) : null}
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
     </Box>
   );
 }

@@ -106,8 +106,8 @@ export default function RequestsPage() {
   return (
     <Stack spacing={3.5}>
       <PageHeader
-        title="Requests"
-        description="Review the live procurement request feed from the authenticated admin API."
+        title="Procurement Requests"
+        description="Review and route incoming procurement requests connected to the live authenticated backend feed."
         actions={
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
@@ -115,15 +115,27 @@ export default function RequestsPage() {
             sx={{ width: { xs: '100%', sm: 'auto' } }}
           >
             <FormControl size="small" sx={{ minWidth: 220 }}>
-              <InputLabel id="request-status-filter-label">Status</InputLabel>
+              <InputLabel id="request-status-filter-label" sx={{ fontWeight: 600 }}>Filter Status</InputLabel>
               <Select
                 labelId="request-status-filter-label"
-                label="Status"
+                label="Filter Status"
                 value={statusFilter}
                 onChange={handleFilterChange}
+                sx={{
+                  bgcolor: '#ffffff',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#e2e8f0',
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#0f172a',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#f59e0b',
+                  },
+                }}
               >
                 {Object.entries(statusLabelByValue).map(([value, label]) => (
-                  <MenuItem key={value} value={value}>
+                  <MenuItem key={value} value={value} sx={{ fontSize: '0.875rem', fontWeight: 500 }}>
                     {label}
                   </MenuItem>
                 ))}
@@ -142,9 +154,11 @@ export default function RequestsPage() {
       />
 
       <Box>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-          Showing {statusLabelByValue[statusFilter]}.
-        </Typography>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+            Active Filter: <Box component="span" sx={{ fontWeight: 700, color: '#0f172a' }}>{statusLabelByValue[statusFilter]}</Box> • {requests.length} active entries
+          </Typography>
+        </Stack>
         {error ? <RequestsErrorState message={error} onRetry={handleRefresh} /> : null}
         {isLoading ? <RequestsLoadingState /> : null}
         {showEmptyState ? <RequestsEmptyState onRefresh={handleRefresh} /> : null}

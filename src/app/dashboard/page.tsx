@@ -26,10 +26,10 @@ export default function DashboardPage() {
     <Stack spacing={4}>
       <PageHeader
         title="Dashboard Overview"
-        description="This foundation gives the admin team a polished shell, clear entry points, and room to wire live data in the next phases."
+        description="The dashboard shell is now protected by real auth bootstrap and can safely grow into live admin workflows."
         actions={
-          <Button href={routes.login} variant="outlined">
-            Go to login
+          <Button href={getModuleRoute('requests')} variant="outlined">
+            Open requests
           </Button>
         }
       />
@@ -115,7 +115,7 @@ export default function DashboardPage() {
                       </Typography>
                       <Box>
                         <Button href={getModuleRoute(module.slug)} variant="text">
-                          Open placeholder
+                          Open module
                         </Button>
                       </Box>
                     </Stack>
@@ -128,10 +128,10 @@ export default function DashboardPage() {
       </Card>
 
       <EmptyState
-        title="Real data wiring is not active yet"
-        description="The shell is ready. Phase 17.1 will connect real auth, server state, and live module screens."
-        actionLabel="Open login"
-        actionHref={routes.login}
+        title="Live module data comes next"
+        description="Auth is wired now, so the next phase can focus on the first real backend-driven admin modules."
+        actionLabel="Open suppliers"
+        actionHref={getModuleRoute('suppliers')}
       />
     </Stack>
   );

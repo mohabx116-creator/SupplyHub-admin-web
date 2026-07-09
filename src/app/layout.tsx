@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from 'next/font/google';
+import { AuthProvider } from '@/components/auth/AuthProvider';
 import { ThemeRegistry } from '@/components/theme/ThemeRegistry';
 import '@/styles/globals.css';
 
@@ -30,7 +31,9 @@ export default function RootLayout({
   return (
     <html lang="en" dir="rtl">
       <body className={`${ibmPlexSans.variable} ${ibmPlexSansArabic.variable}`}>
-        <ThemeRegistry>{children}</ThemeRegistry>
+        <ThemeRegistry>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeRegistry>
       </body>
     </html>
   );

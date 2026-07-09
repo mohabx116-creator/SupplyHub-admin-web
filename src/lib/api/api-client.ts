@@ -1,6 +1,11 @@
-import axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
+import axios, {
+  AxiosHeaders,
+  type AxiosError,
+  type AxiosRequestConfig,
+} from 'axios';
 import { env } from '@/lib/config/env';
 import { ApiError } from './api-error';
+import { readStoredAccessToken } from '@/features/auth/auth.storage';
 
 export const apiClient = axios.create({
   baseURL: env.apiBaseUrl,
@@ -8,6 +13,18 @@ export const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+apiClient.interceptors.request.use((config) => {
+  const accessToken = readStoredAccessToken();
+
+  if (accessToken) {
+    const headers = AxiosHeaders.from(config.headers);
+    headers.set('Authorization', `Bearer ${accessToken}`);
+    config.headers = headers;
+  }
+
+  return config;
 });
 
 const getMessage = (error: unknown): string => {

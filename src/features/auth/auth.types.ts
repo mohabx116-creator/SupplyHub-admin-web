@@ -5,19 +5,20 @@ export type LoginRequest = {
 
 export type AuthUser = {
   id: string;
+  name: string;
   email: string;
-  fullName: string;
   role: string;
-};
-
-export type AuthTokens = {
-  accessToken: string;
-  refreshToken?: string;
+  status: string;
+  companyId: string | null;
 };
 
 export type AuthSession = {
+  accessToken: string;
   user: AuthUser;
-  tokens: AuthTokens;
 };
 
 export type LoginResponse = AuthSession;
+
+export type CurrentUserResponse = AuthUser;
+
+export type AuthStatus = 'anonymous' | 'authenticated' | 'loading';

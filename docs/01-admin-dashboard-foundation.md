@@ -38,10 +38,10 @@ Create the initial standalone `SupplyHub-admin-web` frontend foundation for the 
 
 ## Auth Placeholder Strategy
 
-- Defines auth types, a login wrapper, and an in-memory auth store
-- Does not persist real tokens
-- Does not enforce real protected routing yet
-- Real integration is reserved for Phase 17.1
+- Phase 17.1 connects the login form, bootstrap check, and route guards to the real API auth contract
+- Access tokens are stored in `localStorage` temporarily for browser session continuity
+- Dashboard routes are protected by a client-side guard
+- Real RBAC and refresh-token support are still deferred
 
 ## Env Keys
 
@@ -61,10 +61,10 @@ Create the initial standalone `SupplyHub-admin-web` frontend foundation for the 
 
 ## Known Limitations
 
-- Real authentication is not wired yet
-- Backend mutations are not called yet
-- Protected route enforcement is not yet active
+- No refresh-token flow yet
+- No backend logout endpoint is used
+- RBAC UI is not implemented beyond the backend role field display
 
 ## Next Phase Recommendation
 
-- Phase 17.1: connect real auth and route protection
+- Phase 17.2: wire the first real admin module against authenticated API requests

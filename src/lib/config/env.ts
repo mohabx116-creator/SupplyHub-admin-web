@@ -2,5 +2,6 @@ const fallbackApiBaseUrl = 'http://localhost:3001/api';
 
 export const env = {
   apiBaseUrl:
-    process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || fallbackApiBaseUrl,
+    process.env.NEXT_PUBLIC_API_BASE_URL?.trim().replace(/\/$/, '') ||
+    fallbackApiBaseUrl,
 };

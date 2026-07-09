@@ -104,10 +104,10 @@ export function AppSidebar({ mobileOpen, onMobileClose }: AppSidebarProps) {
         }}
       >
         <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-          Phase 17.0
+          Phase 17.1
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          Foundation only. Real authentication and live backend mutations arrive later.
+          Auth is wired. The next phase will focus on the first live admin modules and mutations.
         </Typography>
       </Box>
     </Stack>

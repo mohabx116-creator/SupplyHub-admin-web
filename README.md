@@ -26,15 +26,28 @@ Standalone Next.js admin dashboard foundation for SupplyHub.
 
 ## Scope
 
-This phase provides the initial admin shell, login placeholder, dashboard foundation, API client wrapper, and auth placeholders.
+This phase provides the initial admin shell, authenticated login flow, dashboard foundation, API client wrapper, and auth guards.
 
 It does not yet implement:
 
-- real auth flow wiring
-- protected route enforcement
 - backend mutations
 - deployment
 
+## Auth
+
+- `NEXT_PUBLIC_API_BASE_URL` points the frontend at the API base URL
+- Login is wired to `POST /api/auth/login`
+- The current user bootstrap uses `GET /api/auth/me`
+- Access tokens are stored in `localStorage` for this phase only
+- Protected dashboard routes redirect unauthenticated users to `/login`
+- Logged-in users are redirected away from `/login` to `/dashboard`
+
+## Current Limitations
+
+- No refresh-token flow yet
+- No logout endpoint is used because the API does not expose one
+- RBAC UI is not implemented beyond the backend role field display
+
 ## Next Step
 
-Phase 17.1 will connect real authentication and guarded navigation.
+Phase 17.2 will wire the first real admin module against authenticated API requests.

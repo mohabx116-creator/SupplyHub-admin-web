@@ -26,8 +26,9 @@ Standalone Next.js admin dashboard foundation for SupplyHub.
 
 ## Scope
 
-This phase provides the initial admin shell, authenticated login flow, dashboard foundation, API client wrapper, auth guards, and the first Requests module.
+This phase provides the initial admin shell, authenticated login flow, dashboard foundation, API client wrapper, auth guards, the first Requests module, and the Suppliers list/detail foundation.
 The Requests detail page now also supports real status transitions that are already exposed by the backend, while convert-to-order remains a disabled placeholder until the API adds that endpoint.
+The Suppliers module now reads from the live admin supplier API and exposes list and detail views without any fake backend data.
 
 It does not yet implement:
 
@@ -49,6 +50,7 @@ It does not yet implement:
 - No logout endpoint is used because the API does not expose one
 - RBAC UI is not implemented beyond the backend role field display
 - Convert-to-order is not yet exposed by the backend admin requests API
+- Supplier mutations are not implemented yet
 
 ## Next Step
 

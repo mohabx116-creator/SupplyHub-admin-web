@@ -45,6 +45,8 @@ const mockApprovals = [
   { title: 'Supplier Qualification: Gulf Industrial Ltd', detail: 'Pending verification of trade certificate and VAT register.', level: 'Low Priority' },
 ];
 
+const liveModules = new Set(['requests', 'suppliers']);
+
 export default function DashboardPage() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
@@ -349,18 +351,18 @@ export default function DashboardPage() {
                     <Stack spacing={1.5}>
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Chip
-                          label={module.slug === 'requests' ? 'Live Link' : 'Demo Placeholder'}
-                          size="small"
-                          sx={{
-                            alignSelf: 'flex-start',
-                            bgcolor: module.slug === 'requests' ? '#d1fae5' : '#f1f5f9',
-                            color: module.slug === 'requests' ? '#065f46' : '#475569',
-                            fontWeight: 700,
-                            borderRadius: 0.5,
-                            fontSize: '0.65rem',
-                          }}
-                        />
-                        {module.slug === 'requests' && (
+                        label={liveModules.has(module.slug) ? 'Live Link' : 'Demo Placeholder'}
+                        size="small"
+                        sx={{
+                          alignSelf: 'flex-start',
+                          bgcolor: liveModules.has(module.slug) ? '#d1fae5' : '#f1f5f9',
+                          color: liveModules.has(module.slug) ? '#065f46' : '#475569',
+                          fontWeight: 700,
+                          borderRadius: 0.5,
+                          fontSize: '0.65rem',
+                        }}
+                      />
+                        {liveModules.has(module.slug) && (
                           <Chip
                             label="Live API"
                             size="small"

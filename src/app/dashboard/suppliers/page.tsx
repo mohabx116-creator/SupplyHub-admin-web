@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { SupplierActionsPanel } from '@/features/suppliers/components/SupplierActionsPanel';
 import { SuppliersEmptyState } from '@/features/suppliers/components/SuppliersEmptyState';
 import { SuppliersErrorState } from '@/features/suppliers/components/SuppliersErrorState';
 import { SuppliersLoadingState } from '@/features/suppliers/components/SuppliersLoadingState';
@@ -222,6 +223,8 @@ export default function SuppliersPage() {
           </Stack>
         </CardContent>
       </Card>
+
+      <SupplierActionsPanel context="list" onMutationSuccess={handleRefresh} />
 
       {error ? <SuppliersErrorState message={error} onRetry={handleRefresh} /> : null}
 

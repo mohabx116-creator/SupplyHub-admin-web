@@ -19,6 +19,7 @@ import {
   Typography,
 } from '@mui/material';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { SupplierActionsPanel } from '@/features/suppliers/components/SupplierActionsPanel';
 import { SupplierStatusChip } from '@/features/suppliers/components/SupplierStatusChip';
 import { SuppliersErrorState } from '@/features/suppliers/components/SuppliersErrorState';
 import { getSupplierById } from '@/features/suppliers/suppliers.api';
@@ -160,6 +161,12 @@ export default function SupplierDetailPage({ params }: SupplierDetailPageProps) 
 
       {!isLoading && !error && supplier ? (
         <Stack spacing={3}>
+          <SupplierActionsPanel
+            context="detail"
+            supplier={supplier}
+            onMutationSuccess={handleRefresh}
+          />
+
           <Card>
             <CardContent>
               <Stack spacing={2.5}>

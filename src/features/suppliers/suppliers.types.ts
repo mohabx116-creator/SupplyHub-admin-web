@@ -39,3 +39,31 @@ export type ListSuppliersParams = {
   category?: string;
   search?: string;
 };
+
+export type SupplierContactPayload = {
+  name: string;
+  role?: string;
+  email?: string;
+  phone?: string;
+  whatsapp?: string;
+  isPrimary?: boolean;
+};
+
+export type SupplierUpsertPayload = {
+  name: string;
+  legalName?: string;
+  email?: string;
+  phone?: string;
+  whatsapp?: string;
+  city?: string;
+  address?: string;
+  taxNumber?: string;
+  category?: string;
+  notes?: string;
+  status?: SupplierStatus;
+  contacts?: SupplierContactPayload[];
+};
+
+export type SupplierStatusPayload = {
+  status: SupplierStatus;
+};

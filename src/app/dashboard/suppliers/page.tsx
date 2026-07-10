@@ -1,15 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import {
-  Button,
-  Card,
-  CardContent,
-  MenuItem,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Button, Card, CardContent, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SupplierActionsPanel } from '@/features/suppliers/components/SupplierActionsPanel';
 import { SuppliersEmptyState } from '@/features/suppliers/components/SuppliersEmptyState';
@@ -23,6 +15,8 @@ import {
   type SupplierRecord,
   type SupplierStatus,
 } from '@/features/suppliers/suppliers.types';
+import { getMessageBundle } from '@/lib/i18n/messages';
+import { useLocaleStore } from '@/lib/i18n/locale.store';
 
 type SupplierFilterDraft = {
   status: SupplierStatus | '';
@@ -48,10 +42,9 @@ const toQueryParams = (draft: SupplierFilterDraft): ListSuppliersParams => ({
   ...(draft.search.trim() ? { search: draft.search.trim() } : {}),
 });
 
-const formatStatusLabel = (status: SupplierStatus) =>
-  status.charAt(0) + status.slice(1).toLowerCase();
-
 export default function SuppliersPage() {
+  const locale = useLocaleStore((state) => state.locale);
+  const copy = getMessageBundle(locale);
   const [draftFilters, setDraftFilters] = useState<SupplierFilterDraft>(initialDraftFilters);
   const [appliedFilters, setAppliedFilters] = useState<ListSuppliersParams>({});
   const [suppliers, setSuppliers] = useState<SupplierRecord[]>([]);
@@ -59,10 +52,7 @@ export default function SuppliersPage() {
   const [error, setError] = useState<string | null>(null);
   const [refreshTick, setRefreshTick] = useState(0);
 
-  const activeFilterCount = useMemo(
-    () => Object.keys(appliedFilters).length,
-    [appliedFilters],
-  );
+  const activeFilterCount = useMemo(() => Object.keys(appliedFilters).length, [appliedFilters]);
 
   useEffect(() => {
     let active = true;
@@ -86,9 +76,7 @@ export default function SuppliersPage() {
 
         setSuppliers([]);
         setError(
-          loadError instanceof Error
-            ? loadError.message
-            : 'Unable to load suppliers right now.',
+          loadError instanceof Error ? loadError.message : copy.suppliers.errors.loadFailed,
         );
       } finally {
         if (active) {
@@ -102,7 +90,7 @@ export default function SuppliersPage() {
     return () => {
       active = false;
     };
-  }, [appliedFilters, refreshTick]);
+  }, [appliedFilters, copy.suppliers.errors.loadFailed, refreshTick]);
 
   const handleApplyFilters = () => {
     setAppliedFilters(toQueryParams(draftFilters));
@@ -123,15 +111,15 @@ export default function SuppliersPage() {
   return (
     <Stack spacing={3.5}>
       <PageHeader
-        title="Suppliers"
-        description="Review the live supplier database, contact records, and operational status straight from the admin API."
+        title={copy.suppliers.listTitle}
+        description={copy.suppliers.listDescription}
         actions={
           <Stack direction="row" spacing={1.5}>
             <Button onClick={handleResetFilters} variant="outlined" disabled={!canReset}>
-              Reset
+              {copy.suppliers.reset}
             </Button>
             <Button onClick={handleRefresh} variant="contained">
-              Refresh
+              {copy.shared.refresh}
             </Button>
           </Stack>
         }
@@ -142,22 +130,17 @@ export default function SuppliersPage() {
           <Stack spacing={2.5}>
             <Stack spacing={0.5}>
               <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                Search and filters
+                {copy.suppliers.list.searchTitle}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Filter by supplier status, city, category, or free-text search.
+                {copy.suppliers.list.searchDescription}
               </Typography>
             </Stack>
 
-            <Stack
-              direction={{ xs: 'column', md: 'row' }}
-              spacing={2}
-              useFlexGap
-              flexWrap="wrap"
-            >
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} useFlexGap flexWrap="wrap">
               <TextField
                 select
-                label="Status"
+                label={copy.suppliers.list.statusLabel}
                 value={draftFilters.status}
                 onChange={(event) =>
                   setDraftFilters((current) => ({
@@ -167,15 +150,15 @@ export default function SuppliersPage() {
                 }
                 sx={{ minWidth: { xs: '100%', md: 220 } }}
               >
-                <MenuItem value="">All statuses</MenuItem>
+                <MenuItem value="">{copy.suppliers.list.allStatuses}</MenuItem>
                 {supplierStatuses.map((status) => (
                   <MenuItem key={status} value={status}>
-                    {formatStatusLabel(status)}
+                    {copy.suppliers.statuses[status]}
                   </MenuItem>
                 ))}
               </TextField>
               <TextField
-                label="City"
+                label={copy.suppliers.list.cityLabel}
                 value={draftFilters.city}
                 onChange={(event) =>
                   setDraftFilters((current) => ({
@@ -183,11 +166,11 @@ export default function SuppliersPage() {
                     city: event.target.value,
                   }))
                 }
-                placeholder="Cairo"
+                placeholder={copy.suppliers.list.cityPlaceholder}
                 sx={{ minWidth: { xs: '100%', md: 220 } }}
               />
               <TextField
-                label="Category"
+                label={copy.suppliers.list.categoryLabel}
                 value={draftFilters.category}
                 onChange={(event) =>
                   setDraftFilters((current) => ({
@@ -195,11 +178,11 @@ export default function SuppliersPage() {
                     category: event.target.value,
                   }))
                 }
-                placeholder="Office supplies"
+                placeholder={copy.suppliers.list.categoryPlaceholder}
                 sx={{ minWidth: { xs: '100%', md: 220 } }}
               />
               <TextField
-                label="Search"
+                label={copy.suppliers.list.searchLabel}
                 value={draftFilters.search}
                 onChange={(event) =>
                   setDraftFilters((current) => ({
@@ -207,17 +190,17 @@ export default function SuppliersPage() {
                     search: event.target.value,
                   }))
                 }
-                placeholder="Name, email, or phone"
+                placeholder={copy.suppliers.list.searchPlaceholder}
                 sx={{ minWidth: { xs: '100%', md: 280 } }}
               />
             </Stack>
 
             <Stack direction="row" spacing={1.5}>
               <Button onClick={handleApplyFilters} variant="contained">
-                Apply filters
+                {copy.suppliers.list.apply}
               </Button>
               <Button onClick={handleResetFilters} variant="outlined">
-                Clear filters
+                {copy.suppliers.list.clear}
               </Button>
             </Stack>
           </Stack>

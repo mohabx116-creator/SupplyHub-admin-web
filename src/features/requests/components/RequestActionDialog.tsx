@@ -9,6 +9,8 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { getMessageBundle } from '@/lib/i18n/messages';
+import { useLocaleStore } from '@/lib/i18n/locale.store';
 import type { RequestStatus } from '../requests.types';
 
 type RequestActionDialogProps = {
@@ -34,6 +36,9 @@ export function RequestActionDialog({
   onClose,
   onConfirm,
 }: RequestActionDialogProps) {
+  const locale = useLocaleStore((state) => state.locale);
+  const copy = getMessageBundle(locale);
+
   return (
     <Dialog open={open} onClose={loading ? undefined : onClose} fullWidth maxWidth="sm">
       <DialogTitle sx={{ fontWeight: 800 }}>{title}</DialogTitle>
@@ -43,13 +48,13 @@ export function RequestActionDialog({
             {description}
           </Typography>
           <Typography variant="caption" color="text.secondary">
-            Target status: {targetStatus}
+            {copy.requests.actions.targetStatus}: {copy.requests.requestStatuses[targetStatus]}
           </Typography>
         </Stack>
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 3 }}>
         <Button onClick={onClose} disabled={loading} variant="outlined">
-          Cancel
+          {copy.shared.cancel}
         </Button>
         <Button
           onClick={onConfirm}
@@ -57,7 +62,7 @@ export function RequestActionDialog({
           variant="contained"
           color={danger ? 'error' : 'primary'}
         >
-          {loading ? 'Applying...' : confirmLabel}
+          {loading ? copy.requests.actions.applying : confirmLabel}
         </Button>
       </DialogActions>
     </Dialog>

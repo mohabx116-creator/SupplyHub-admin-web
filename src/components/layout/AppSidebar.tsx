@@ -21,6 +21,8 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { getMessageBundle } from '@/lib/i18n/messages';
+import { useLocaleStore } from '@/lib/i18n/locale.store';
 import { getModuleRoute, routes } from '@/lib/routes/routes';
 
 type AppSidebarProps = {
@@ -28,21 +30,22 @@ type AppSidebarProps = {
   onMobileClose: () => void;
 };
 
-const navItems = [
-  { label: 'Dashboard', href: routes.dashboard, icon: DashboardOutlinedIcon },
-  { label: 'Requests', href: routes.requests, icon: RequestPageOutlinedIcon },
-  { label: 'Suppliers', href: routes.suppliers, icon: StorefrontOutlinedIcon },
-  { label: 'Quotations', href: getModuleRoute('quotations'), icon: ViewListOutlinedIcon },
-  { label: 'Orders', href: getModuleRoute('orders'), icon: ShoppingCartOutlinedIcon },
-  { label: 'Payments', href: getModuleRoute('payments'), icon: PaymentOutlinedIcon },
-  { label: 'Deliveries', href: getModuleRoute('deliveries'), icon: LocalShippingOutlinedIcon },
-  { label: 'Invoices', href: getModuleRoute('invoices'), icon: ReceiptLongOutlinedIcon },
-] as const;
-
 const drawerWidth = 300;
 
 export function AppSidebar({ mobileOpen, onMobileClose }: AppSidebarProps) {
   const pathname = usePathname();
+  const copy = getMessageBundle(useLocaleStore((state) => state.locale));
+
+  const navItems = [
+    { label: copy.dashboard.title, href: routes.dashboard, icon: DashboardOutlinedIcon },
+    { label: copy.requests.listTitle, href: routes.requests, icon: RequestPageOutlinedIcon },
+    { label: copy.suppliers.listTitle, href: routes.suppliers, icon: StorefrontOutlinedIcon },
+    { label: copy.dashboard.moduleQuotations, href: getModuleRoute('quotations'), icon: ViewListOutlinedIcon },
+    { label: copy.dashboard.moduleOrders, href: getModuleRoute('orders'), icon: ShoppingCartOutlinedIcon },
+    { label: copy.dashboard.modulePayments, href: getModuleRoute('payments'), icon: PaymentOutlinedIcon },
+    { label: copy.dashboard.moduleDeliveries, href: getModuleRoute('deliveries'), icon: LocalShippingOutlinedIcon },
+    { label: copy.dashboard.moduleInvoices, href: getModuleRoute('invoices'), icon: ReceiptLongOutlinedIcon },
+  ] as const;
 
   const drawerContent = (
     <Stack sx={{ height: '100%', p: 3, gap: 3, bgcolor: '#0f172a', color: '#f1f5f9' }}>
@@ -63,11 +66,14 @@ export function AppSidebar({ mobileOpen, onMobileClose }: AppSidebarProps) {
           SH
         </Box>
         <Box>
-          <Typography variant="subtitle2" sx={{ fontWeight: 800, letterSpacing: '0.05em', color: '#ffffff', lineHeight: 1.1 }}>
-            SUPPLYHUB
+          <Typography
+            variant="subtitle2"
+            sx={{ fontWeight: 800, letterSpacing: '0.05em', color: '#ffffff', lineHeight: 1.1 }}
+          >
+            {copy.shell.appName}
           </Typography>
           <Typography variant="caption" sx={{ color: '#94a3b8', fontWeight: 600 }}>
-            Procurement Portal
+            {copy.shell.sidebarSubtitle}
           </Typography>
         </Box>
       </Stack>
@@ -126,10 +132,10 @@ export function AppSidebar({ mobileOpen, onMobileClose }: AppSidebarProps) {
         }}
       >
         <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#ffffff' }}>
-          SupplyHub Operations
+          {copy.dashboard.sidebarTitle}
         </Typography>
         <Typography variant="caption" sx={{ color: '#94a3b8', mt: 0.5, display: 'block', lineHeight: 1.4 }}>
-          Visual identity aligned with Stitch design guidelines. All active requests and authentication routes are live.
+          {copy.shell.sidebarFootnote}
         </Typography>
       </Box>
     </Stack>

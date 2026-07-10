@@ -12,6 +12,8 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { getMessageBundle } from '@/lib/i18n/messages';
+import { useLocaleStore } from '@/lib/i18n/locale.store';
 import { getSupplierRoute } from '@/lib/routes/routes';
 import { SupplierStatusChip } from './SupplierStatusChip';
 import type { SupplierRecord } from '../suppliers.types';
@@ -20,8 +22,8 @@ type SuppliersTableProps = {
   suppliers: SupplierRecord[];
 };
 
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat('en-US', {
+const formatDate = (value: string, locale: 'ar' | 'en') =>
+  new Intl.DateTimeFormat(locale === 'ar' ? 'ar-EG' : 'en-US', {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(new Date(value));
@@ -33,6 +35,8 @@ const getPrimaryContact = (supplier: SupplierRecord) =>
 
 export function SuppliersTable({ suppliers }: SuppliersTableProps) {
   const router = useRouter();
+  const locale = useLocaleStore((state) => state.locale);
+  const copy = getMessageBundle(locale);
 
   return (
     <Card sx={{ overflow: 'hidden', border: '1px solid #e2e8f0', borderRadius: 1 }}>
@@ -40,13 +44,13 @@ export function SuppliersTable({ suppliers }: SuppliersTableProps) {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Supplier</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Primary contact</TableCell>
-              <TableCell align="right">Contacts</TableCell>
-              <TableCell>City</TableCell>
-              <TableCell>Updated</TableCell>
+              <TableCell>{copy.suppliers.list.supplierLabel}</TableCell>
+              <TableCell>{copy.shared.status}</TableCell>
+              <TableCell>{copy.suppliers.list.categoryLabel}</TableCell>
+              <TableCell>{copy.suppliers.list.contactDetails}</TableCell>
+              <TableCell align="right">{copy.suppliers.list.contactsLabel}</TableCell>
+              <TableCell>{copy.suppliers.list.cityLabel}</TableCell>
+              <TableCell>{copy.suppliers.list.updatedLabel}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -68,10 +72,7 @@ export function SuppliersTable({ suppliers }: SuppliersTableProps) {
                 >
                   <TableCell>
                     <Stack spacing={0.5}>
-                      <Typography
-                        variant="subtitle2"
-                        sx={{ fontWeight: 700, color: '#0f172a' }}
-                      >
+                      <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#0f172a' }}>
                         {supplier.name}
                       </Typography>
                       <Typography
@@ -96,16 +97,16 @@ export function SuppliersTable({ suppliers }: SuppliersTableProps) {
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" sx={{ fontWeight: 600, color: '#0f172a' }}>
-                      {supplier.category ?? '-'}
+                      {supplier.category ?? copy.shared.noData}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Stack spacing={0.25}>
                       <Typography variant="body2" sx={{ fontWeight: 600, color: '#0f172a' }}>
-                        {primaryContact?.name ?? '-'}
+                        {primaryContact?.name ?? copy.suppliers.list.noPrimaryContact}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        {primaryContact?.role ?? 'Primary contact not marked'}
+                        {primaryContact?.role ?? copy.suppliers.list.primaryContactMissing}
                       </Typography>
                     </Stack>
                   </TableCell>
@@ -117,13 +118,11 @@ export function SuppliersTable({ suppliers }: SuppliersTableProps) {
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" sx={{ color: '#0f172a' }}>
-                      {supplier.city ?? '-'}
+                      {supplier.city ?? copy.shared.noData}
                     </Typography>
                   </TableCell>
-                  <TableCell
-                    sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'text.secondary' }}
-                  >
-                    {formatDate(supplier.updatedAt)}
+                  <TableCell sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'text.secondary' }}>
+                    {formatDate(supplier.updatedAt, locale)}
                   </TableCell>
                 </TableRow>
               );

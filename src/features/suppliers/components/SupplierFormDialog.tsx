@@ -17,11 +17,9 @@ import {
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import type {
-  SupplierRecord,
-  SupplierStatus,
-  SupplierUpsertPayload,
-} from '../suppliers.types';
+import { getMessageBundle } from '@/lib/i18n/messages';
+import { useLocaleStore } from '@/lib/i18n/locale.store';
+import type { SupplierRecord, SupplierStatus, SupplierUpsertPayload } from '../suppliers.types';
 import { supplierStatuses } from '../suppliers.types';
 
 type ContactDraft = {
@@ -151,6 +149,8 @@ export function SupplierFormDialog({
   onClose,
   onSubmit,
 }: SupplierFormDialogProps) {
+  const locale = useLocaleStore((state) => state.locale);
+  const copy = getMessageBundle(locale);
   const [draft, setDraft] = useState<SupplierFormState>(() => toDraft(initialSupplier));
   const [fieldError, setFieldError] = useState<string | null>(null);
 
@@ -193,12 +193,12 @@ export function SupplierFormDialog({
 
   const handleSubmit = async () => {
     if (!draft.name.trim()) {
-      setFieldError('Supplier name is required.');
+      setFieldError(copy.suppliers.list.supplierNameRequired);
       return;
     }
 
     if (draft.contacts.some((contact) => contact.isPrimary) && primaryContactCount > 1) {
-      setFieldError('Only one contact can be marked as primary.');
+      setFieldError(copy.suppliers.list.onlyOnePrimaryContact);
       return;
     }
 
@@ -218,7 +218,7 @@ export function SupplierFormDialog({
           {fieldError ? <Alert severity="error">{fieldError}</Alert> : null}
 
           <TextField
-            label="Supplier name"
+            label={copy.suppliers.list.supplierNameLabel}
             required
             fullWidth
             value={draft.name}
@@ -229,7 +229,7 @@ export function SupplierFormDialog({
 
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
             <TextField
-              label="Legal name"
+              label={copy.suppliers.list.legalNameLabel}
               fullWidth
               value={draft.legalName}
               onChange={(event) =>
@@ -237,7 +237,7 @@ export function SupplierFormDialog({
               }
             />
             <TextField
-              label="Email"
+              label={copy.suppliers.list.emailLabel}
               fullWidth
               value={draft.email}
               onChange={(event) =>
@@ -248,7 +248,7 @@ export function SupplierFormDialog({
 
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
             <TextField
-              label="Phone"
+              label={copy.suppliers.list.phoneLabel}
               fullWidth
               value={draft.phone}
               onChange={(event) =>
@@ -256,7 +256,7 @@ export function SupplierFormDialog({
               }
             />
             <TextField
-              label="WhatsApp"
+              label={copy.suppliers.list.whatsappLabel}
               fullWidth
               value={draft.whatsapp}
               onChange={(event) =>
@@ -267,7 +267,7 @@ export function SupplierFormDialog({
 
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
             <TextField
-              label="City"
+              label={copy.suppliers.list.cityLabel}
               fullWidth
               value={draft.city}
               onChange={(event) =>
@@ -275,7 +275,7 @@ export function SupplierFormDialog({
               }
             />
             <TextField
-              label="Category"
+              label={copy.suppliers.list.categoryLabel}
               fullWidth
               value={draft.category}
               onChange={(event) =>
@@ -286,7 +286,7 @@ export function SupplierFormDialog({
 
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
             <TextField
-              label="Address"
+              label={copy.suppliers.list.addressLabel}
               fullWidth
               value={draft.address}
               onChange={(event) =>
@@ -294,7 +294,7 @@ export function SupplierFormDialog({
               }
             />
             <TextField
-              label="Tax number"
+              label={copy.suppliers.list.taxNumberLabel}
               fullWidth
               value={draft.taxNumber}
               onChange={(event) =>
@@ -304,7 +304,7 @@ export function SupplierFormDialog({
           </Stack>
 
           <TextField
-            label="Internal notes"
+            label={copy.suppliers.list.notesLabel}
             fullWidth
             multiline
             minRows={4}
@@ -317,7 +317,7 @@ export function SupplierFormDialog({
           {mode === 'create' ? (
             <TextField
               select
-              label="Initial status"
+              label={copy.suppliers.list.initialStatus}
               fullWidth
               value={draft.status}
               onChange={(event) =>
@@ -326,12 +326,12 @@ export function SupplierFormDialog({
                   status: event.target.value as SupplierStatus | '',
                 }))
               }
-              helperText="Optional. If not selected, the backend default applies."
+              helperText={copy.suppliers.list.optionalBackendDefault}
             >
-              <MenuItem value="">Use backend default</MenuItem>
+              <MenuItem value="">{copy.suppliers.list.useBackendDefault}</MenuItem>
               {supplierStatuses.map((status) => (
                 <MenuItem key={status} value={status}>
-                  {status}
+                  {copy.suppliers.statuses[status]}
                 </MenuItem>
               ))}
             </TextField>
@@ -342,10 +342,10 @@ export function SupplierFormDialog({
           <Stack spacing={1.5}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                Contacts
+                {copy.suppliers.list.contactsSection}
               </Typography>
               <Button startIcon={<AddCircleOutlineIcon />} onClick={addContact} variant="text">
-                Add contact
+                {copy.suppliers.list.addContact}
               </Button>
             </Stack>
 
@@ -358,7 +358,7 @@ export function SupplierFormDialog({
                 >
                   <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <Typography variant="body2" sx={{ fontWeight: 700 }}>
-                      Contact {index + 1}
+                      {copy.suppliers.list.contactHeader.replace('{index}', String(index + 1))}
                     </Typography>
                     <IconButton
                       onClick={() => removeContact(index)}
@@ -370,60 +370,50 @@ export function SupplierFormDialog({
                   </Stack>
                   <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
                     <TextField
-                      label="Name"
+                      label={copy.suppliers.list.contactNameLabel}
                       fullWidth
                       value={contact.name}
-                      onChange={(event) =>
-                        updateContact(index, { name: event.target.value })
-                      }
+                      onChange={(event) => updateContact(index, { name: event.target.value })}
                     />
                     <TextField
-                      label="Role"
+                      label={copy.suppliers.list.contactRoleLabel}
                       fullWidth
                       value={contact.role}
-                      onChange={(event) =>
-                        updateContact(index, { role: event.target.value })
-                      }
+                      onChange={(event) => updateContact(index, { role: event.target.value })}
                     />
                   </Stack>
                   <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
                     <TextField
-                      label="Email"
+                      label={copy.suppliers.list.contactEmailLabel}
                       fullWidth
                       value={contact.email}
-                      onChange={(event) =>
-                        updateContact(index, { email: event.target.value })
-                      }
+                      onChange={(event) => updateContact(index, { email: event.target.value })}
                     />
                     <TextField
-                      label="Phone"
+                      label={copy.suppliers.list.contactPhoneLabel}
                       fullWidth
                       value={contact.phone}
-                      onChange={(event) =>
-                        updateContact(index, { phone: event.target.value })
-                      }
+                      onChange={(event) => updateContact(index, { phone: event.target.value })}
                     />
                   </Stack>
                   <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
                     <TextField
-                      label="WhatsApp"
+                      label={copy.suppliers.list.contactWhatsAppLabel}
                       fullWidth
                       value={contact.whatsapp}
-                      onChange={(event) =>
-                        updateContact(index, { whatsapp: event.target.value })
-                      }
+                      onChange={(event) => updateContact(index, { whatsapp: event.target.value })}
                     />
                     <TextField
                       select
-                      label="Primary"
+                      label={copy.suppliers.list.primaryLabel}
                       fullWidth
                       value={contact.isPrimary ? 'yes' : 'no'}
                       onChange={(event) =>
                         updateContact(index, { isPrimary: event.target.value === 'yes' })
                       }
                     >
-                      <MenuItem value="yes">Yes</MenuItem>
-                      <MenuItem value="no">No</MenuItem>
+                      <MenuItem value="yes">{copy.suppliers.list.contactYes}</MenuItem>
+                      <MenuItem value="no">{copy.suppliers.list.contactNo}</MenuItem>
                     </TextField>
                   </Stack>
                 </Stack>
@@ -434,10 +424,16 @@ export function SupplierFormDialog({
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 3 }}>
         <Button onClick={handleClose} disabled={loading} variant="outlined">
-          Cancel
+          {copy.shared.cancel}
         </Button>
         <Button onClick={() => void handleSubmit()} disabled={loading} variant="contained">
-          {loading ? (mode === 'create' ? 'Creating...' : 'Saving...') : mode === 'create' ? 'Create Supplier' : 'Save Changes'}
+          {loading
+            ? mode === 'create'
+              ? copy.suppliers.list.creating
+              : copy.suppliers.list.saving
+            : mode === 'create'
+              ? copy.suppliers.addSupplier
+              : copy.suppliers.list.saveChanges}
         </Button>
       </DialogActions>
     </Dialog>

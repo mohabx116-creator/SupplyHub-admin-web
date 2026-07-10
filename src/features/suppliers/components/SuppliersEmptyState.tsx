@@ -1,29 +1,27 @@
 import { Button, Card, CardContent, Stack, Typography } from '@mui/material';
+import { getMessageBundle } from '@/lib/i18n/messages';
+import { useLocaleStore } from '@/lib/i18n/locale.store';
 
 type SuppliersEmptyStateProps = {
   onRefresh: () => void;
 };
 
 export function SuppliersEmptyState({ onRefresh }: SuppliersEmptyStateProps) {
+  const locale = useLocaleStore((state) => state.locale);
+  const copy = getMessageBundle(locale);
+
   return (
-    <Card
-      variant="outlined"
-      sx={{
-        borderRadius: 4,
-        borderStyle: 'dashed',
-        background: 'rgba(255,255,255,0.76)',
-      }}
-    >
+    <Card sx={{ border: '1px dashed #cbd5e1', bgcolor: '#f8fafc' }}>
       <CardContent sx={{ p: 4 }}>
-        <Stack spacing={2} alignItems="flex-start">
+        <Stack spacing={1.5} alignItems="flex-start">
           <Typography variant="h6" sx={{ fontWeight: 800 }}>
-            No suppliers found
+            {copy.suppliers.noSuppliersTitle}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            The admin supplier API is reachable, but no supplier records match the current filters.
+          <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 640 }}>
+            {copy.suppliers.noSuppliersDescription}
           </Typography>
           <Button onClick={onRefresh} variant="contained">
-            Refresh
+            {copy.shared.refresh}
           </Button>
         </Stack>
       </CardContent>

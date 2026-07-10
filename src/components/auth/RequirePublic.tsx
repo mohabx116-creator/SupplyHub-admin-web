@@ -5,9 +5,13 @@ import { useRouter } from 'next/navigation';
 import { Box, Card, CardContent, CircularProgress, Stack, Typography } from '@mui/material';
 import { routes } from '@/lib/routes/routes';
 import { useAuthStore } from '@/features/auth/auth.store';
+import { getMessageBundle } from '@/lib/i18n/messages';
+import { useLocaleStore } from '@/lib/i18n/locale.store';
 
 export function RequirePublic({ children }: PropsWithChildren) {
   const router = useRouter();
+  const locale = useLocaleStore((state) => state.locale);
+  const copy = getMessageBundle(locale);
   const hydrated = useAuthStore((state) => state.hydrated);
   const status = useAuthStore((state) => state.status);
   const hasSession = useAuthStore((state) => Boolean(state.user && state.accessToken));
@@ -26,10 +30,10 @@ export function RequirePublic({ children }: PropsWithChildren) {
             <Stack spacing={2} alignItems="center" sx={{ py: 2 }}>
               <CircularProgress />
               <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                Checking admin session
+                {copy.auth.checkingSession}
               </Typography>
               <Typography variant="body2" color="text.secondary" align="center">
-                We are checking whether you already signed in.
+                {copy.auth.alreadySignedIn}
               </Typography>
             </Stack>
           </CardContent>
@@ -46,10 +50,10 @@ export function RequirePublic({ children }: PropsWithChildren) {
             <Stack spacing={2} alignItems="center" sx={{ py: 2 }}>
               <CircularProgress />
               <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                Redirecting to dashboard
+                {copy.auth.redirectingDashboard}
               </Typography>
               <Typography variant="body2" color="text.secondary" align="center">
-                You already have an active admin session.
+                {copy.auth.activeSession}
               </Typography>
             </Stack>
           </CardContent>

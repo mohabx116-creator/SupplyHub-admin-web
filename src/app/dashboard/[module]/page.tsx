@@ -1,7 +1,11 @@
-import { notFound } from 'next/navigation';
+'use client';
+
+import { use } from 'react';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { getMessageBundle } from '@/lib/i18n/messages';
+import { useLocaleStore } from '@/lib/i18n/locale.store';
 import { getModuleBySlug, routes } from '@/lib/routes/routes';
 
 type ModulePageProps = {
@@ -10,39 +14,41 @@ type ModulePageProps = {
   }>;
 };
 
-export default async function ModulePlaceholderPage({
-  params,
-}: ModulePageProps) {
-  const { module } = await params;
-  const current = getModuleBySlug(module);
+export default function ModulePlaceholderPage({ params }: ModulePageProps) {
+  const resolved = use(params);
+  const locale = useLocaleStore((state) => state.locale);
+  const copy = getMessageBundle(locale);
+  const current = getModuleBySlug(resolved.module);
 
   if (!current) {
-    notFound();
+    return null;
   }
+
+  const moduleCopy = copy.dashboard.moduleCatalog[current.slug as keyof typeof copy.dashboard.moduleCatalog];
 
   return (
     <Stack spacing={4}>
       <PageHeader
-        title={current.label}
-        description={current.description}
+        title={moduleCopy.label}
+        description={moduleCopy.description}
         actions={
           <Button href={routes.dashboard} variant="outlined">
-            Back to dashboard
+            {copy.modulePlaceholder.backToDashboard}
           </Button>
         }
       />
       <EmptyState
-        title="Module placeholder"
-        description="This route is reserved for the next phase, where the live admin module will be implemented."
-        actionLabel="Back to dashboard"
+        title={copy.modulePlaceholder.title}
+        description={copy.modulePlaceholder.description}
+        actionLabel={copy.modulePlaceholder.backToDashboard}
         actionHref={routes.dashboard}
       />
       <Box sx={{ display: 'grid', gap: 1 }}>
         <Typography variant="body2" color="text.secondary">
-          Current state
+          {copy.modulePlaceholder.currentStateTitle}
         </Typography>
         <Typography variant="body1" sx={{ fontWeight: 700 }}>
-          Foundation only. No backend mutation calls are wired yet.
+          {copy.modulePlaceholder.currentStateValue}
         </Typography>
       </Box>
     </Stack>

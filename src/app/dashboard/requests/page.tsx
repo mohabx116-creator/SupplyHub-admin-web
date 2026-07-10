@@ -20,33 +20,38 @@ import { RequestsErrorState } from '@/features/requests/components/RequestsError
 import { RequestsLoadingState } from '@/features/requests/components/RequestsLoadingState';
 import { RequestsTable } from '@/features/requests/components/RequestsTable';
 import { listRequests } from '@/features/requests/requests.api';
-import type {
-  RequestRecord,
-  RequestStatus,
-} from '@/features/requests/requests.types';
+import type { RequestRecord, RequestStatus } from '@/features/requests/requests.types';
 import { requestStatuses } from '@/features/requests/requests.types';
+import { getMessageBundle } from '@/lib/i18n/messages';
+import { useLocaleStore } from '@/lib/i18n/locale.store';
 
 type RequestStatusFilter = 'all' | RequestStatus;
 
-const statusLabelByValue: Record<RequestStatusFilter, string> = {
-  all: 'All statuses',
-  NEW: 'New',
-  NEEDS_REVIEW: 'Needs review',
-  NEEDS_CLARIFICATION: 'Needs clarification',
-  READY_FOR_SOURCING: 'Ready for sourcing',
-  SOURCING: 'Sourcing',
-  SUPPLIER_QUOTES_RECEIVED: 'Supplier quotes received',
-  CUSTOMER_QUOTE_SENT: 'Customer quote sent',
-  CUSTOMER_APPROVED: 'Customer approved',
-  CUSTOMER_REJECTED: 'Customer rejected',
-  CANCELLED: 'Cancelled',
-  CONVERTED_TO_ORDER: 'Converted to order',
+const getStatusLabelByLocale = (locale: 'ar' | 'en') => {
+  const copy = getMessageBundle(locale);
+
+  return {
+    all: copy.requests.filterAll,
+    NEW: copy.requests.requestStatuses.NEW,
+    NEEDS_REVIEW: copy.requests.requestStatuses.NEEDS_REVIEW,
+    NEEDS_CLARIFICATION: copy.requests.requestStatuses.NEEDS_CLARIFICATION,
+    READY_FOR_SOURCING: copy.requests.requestStatuses.READY_FOR_SOURCING,
+    SOURCING: copy.requests.requestStatuses.SOURCING,
+    SUPPLIER_QUOTES_RECEIVED: copy.requests.requestStatuses.SUPPLIER_QUOTES_RECEIVED,
+    CUSTOMER_QUOTE_SENT: copy.requests.requestStatuses.CUSTOMER_QUOTE_SENT,
+    CUSTOMER_APPROVED: copy.requests.requestStatuses.CUSTOMER_APPROVED,
+    CUSTOMER_REJECTED: copy.requests.requestStatuses.CUSTOMER_REJECTED,
+    CANCELLED: copy.requests.requestStatuses.CANCELLED,
+    CONVERTED_TO_ORDER: copy.requests.requestStatuses.CONVERTED_TO_ORDER,
+  } as const satisfies Record<RequestStatusFilter, string>;
 };
 
 export default function RequestsPage() {
+  const locale = useLocaleStore((state) => state.locale);
+  const copy = getMessageBundle(locale);
+  const statusLabelByValue = getStatusLabelByLocale(locale);
   const [requests, setRequests] = useState<RequestRecord[]>([]);
-  const [statusFilter, setStatusFilter] =
-    useState<RequestStatusFilter>('all');
+  const [statusFilter, setStatusFilter] = useState<RequestStatusFilter>('all');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshTick, setRefreshTick] = useState(0);
@@ -77,7 +82,7 @@ export default function RequestsPage() {
         setError(
           loadError instanceof Error
             ? loadError.message
-            : 'Unable to load requests right now.',
+            : copy.requests.errors.loadFailed,
         );
       } finally {
         if (active) {
@@ -91,7 +96,7 @@ export default function RequestsPage() {
     return () => {
       active = false;
     };
-  }, [refreshTick, statusFilter]);
+  }, [copy.requests.errors.loadFailed, refreshTick, statusFilter]);
 
   const handleFilterChange = (event: SelectChangeEvent<RequestStatusFilter>) => {
     setStatusFilter(event.target.value as RequestStatusFilter);
@@ -106,8 +111,8 @@ export default function RequestsPage() {
   return (
     <Stack spacing={3.5}>
       <PageHeader
-        title="Procurement Requests"
-        description="Review and route incoming procurement requests connected to the live authenticated backend feed."
+        title={copy.requests.listTitle}
+        description={copy.requests.listDescription}
         actions={
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
@@ -115,10 +120,12 @@ export default function RequestsPage() {
             sx={{ width: { xs: '100%', sm: 'auto' } }}
           >
             <FormControl size="small" sx={{ minWidth: 220 }}>
-              <InputLabel id="request-status-filter-label" sx={{ fontWeight: 600 }}>Filter Status</InputLabel>
+              <InputLabel id="request-status-filter-label" sx={{ fontWeight: 600 }}>
+                {copy.requests.filterLabel}
+              </InputLabel>
               <Select
                 labelId="request-status-filter-label"
-                label="Filter Status"
+                label={copy.requests.filterLabel}
                 value={statusFilter}
                 onChange={handleFilterChange}
                 sx={{
@@ -147,7 +154,7 @@ export default function RequestsPage() {
               size="medium"
               sx={{ minWidth: 120 }}
             >
-              Refresh
+              {copy.shared.refresh}
             </Button>
           </Stack>
         }
@@ -156,7 +163,11 @@ export default function RequestsPage() {
       <Box>
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
           <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
-            Active Filter: <Box component="span" sx={{ fontWeight: 700, color: '#0f172a' }}>{statusLabelByValue[statusFilter]}</Box> • {requests.length} active entries
+            {copy.requests.activeFilter}:&nbsp;
+            <Box component="span" sx={{ fontWeight: 700, color: '#0f172a' }}>
+              {statusLabelByValue[statusFilter]}
+            </Box>
+            &nbsp;• {requests.length} {copy.requests.activeEntries}
           </Typography>
         </Stack>
         {error ? <RequestsErrorState message={error} onRetry={handleRefresh} /> : null}

@@ -5,9 +5,13 @@ import { useRouter } from 'next/navigation';
 import { Box, Card, CardContent, CircularProgress, Stack, Typography } from '@mui/material';
 import { routes } from '@/lib/routes/routes';
 import { useAuthStore } from '@/features/auth/auth.store';
+import { getMessageBundle } from '@/lib/i18n/messages';
+import { useLocaleStore } from '@/lib/i18n/locale.store';
 
 export function RequireAuth({ children }: PropsWithChildren) {
   const router = useRouter();
+  const locale = useLocaleStore((state) => state.locale);
+  const copy = getMessageBundle(locale);
   const hydrated = useAuthStore((state) => state.hydrated);
   const status = useAuthStore((state) => state.status);
   const hasSession = useAuthStore((state) => Boolean(state.user && state.accessToken));
@@ -26,10 +30,10 @@ export function RequireAuth({ children }: PropsWithChildren) {
             <Stack spacing={2} alignItems="center" sx={{ py: 2 }}>
               <CircularProgress />
               <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                Loading admin session
+                {copy.auth.loadingSession}
               </Typography>
               <Typography variant="body2" color="text.secondary" align="center">
-                Verifying your access before opening the dashboard.
+                {copy.auth.verifyingAccess}
               </Typography>
             </Stack>
           </CardContent>
@@ -46,10 +50,10 @@ export function RequireAuth({ children }: PropsWithChildren) {
             <Stack spacing={2} alignItems="center" sx={{ py: 2 }}>
               <CircularProgress />
               <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                Redirecting to login
+                {copy.auth.redirectingLogin}
               </Typography>
               <Typography variant="body2" color="text.secondary" align="center">
-                This area is reserved for authenticated admin users.
+                {copy.auth.reservedAuthenticated}
               </Typography>
             </Stack>
           </CardContent>

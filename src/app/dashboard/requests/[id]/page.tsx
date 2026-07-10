@@ -26,6 +26,8 @@ import { RequestsErrorState } from '@/features/requests/components/RequestsError
 import { getRequestById } from '@/features/requests/requests.api';
 import type { RequestRecord } from '@/features/requests/requests.types';
 import { routes } from '@/lib/routes/routes';
+import { getMessageBundle } from '@/lib/i18n/messages';
+import { useLocaleStore } from '@/lib/i18n/locale.store';
 
 type RequestDetailPageProps = {
   params: Promise<{
@@ -33,12 +35,12 @@ type RequestDetailPageProps = {
   }>;
 };
 
-const formatDate = (value: string | null) => {
+const formatDate = (value: string | null, locale: 'ar' | 'en') => {
   if (!value) {
-    return '—';
+    return '-';
   }
 
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-EG' : 'en-US', {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(new Date(value));
@@ -75,10 +77,10 @@ const RequestField = ({
   </Stack>
 );
 
-export default function RequestDetailPage({
-  params,
-}: RequestDetailPageProps) {
+export default function RequestDetailPage({ params }: RequestDetailPageProps) {
   const resolvedParams = use(params);
+  const locale = useLocaleStore((state) => state.locale);
+  const copy = getMessageBundle(locale);
   const [request, setRequest] = useState<RequestRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -106,9 +108,7 @@ export default function RequestDetailPage({
 
         setRequest(null);
         setError(
-          loadError instanceof Error
-            ? loadError.message
-            : 'Unable to load request details right now.',
+          loadError instanceof Error ? loadError.message : copy.requests.errors.loadFailed,
         );
       } finally {
         if (active) {
@@ -122,7 +122,7 @@ export default function RequestDetailPage({
     return () => {
       active = false;
     };
-  }, [resolvedParams.id, refreshTick]);
+  }, [copy.requests.errors.loadFailed, refreshTick, resolvedParams.id]);
 
   const handleRefresh = () => {
     setRefreshTick((value) => value + 1);
@@ -131,15 +131,15 @@ export default function RequestDetailPage({
   return (
     <Stack spacing={3.5}>
       <PageHeader
-        title="Request details"
-        description="Review the full admin-safe request record and its nested company, requester, and item information."
+        title={copy.requests.detailTitle}
+        description={copy.requests.detailDescription}
         actions={
           <Stack direction="row" spacing={1.5}>
             <Button href={routes.requests} variant="outlined">
-              Back to Requests
+              {copy.requests.backToList}
             </Button>
             <Button onClick={handleRefresh} variant="contained">
-              Refresh
+              {copy.shared.refresh}
             </Button>
           </Stack>
         }
@@ -170,20 +170,16 @@ export default function RequestDetailPage({
           <Card>
             <CardContent>
               <Stack spacing={2.5}>
-                <Stack
-                  direction={{ xs: 'column', md: 'row' }}
-                  spacing={2}
-                  justifyContent="space-between"
-                >
+                <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} justifyContent="space-between">
                   <Stack spacing={1}>
                     <Typography variant="overline" color="text.secondary">
-                      Request
+                      {copy.requests.requestLabel}
                     </Typography>
                     <Typography variant="h4" sx={{ fontWeight: 800 }}>
                       {request.title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {request.description || 'No description provided.'}
+                      {request.description || copy.requests.noDescription}
                     </Typography>
                   </Stack>
                   <RequestStatusChip status={request.status} />
@@ -192,50 +188,32 @@ export default function RequestDetailPage({
                 <Divider />
                 <Grid container spacing={2.5}>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
-                    <RequestField label="Request ID" value={request.id} mono />
+                    <RequestField label={copy.requests.columns.requestId} value={request.id} mono />
                   </Grid>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
-                    <RequestField label="Status" value={request.status} />
+                    <RequestField label={copy.shared.status} value={copy.requests.requestStatuses[request.status]} />
                   </Grid>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
                     <RequestField
-                      label="Needed by"
-                      value={formatDate(request.neededByDate)}
+                      label={copy.requests.columns.neededBy}
+                      value={formatDate(request.neededByDate, locale)}
                       mono
                     />
                   </Grid>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
-                    <RequestField
-                      label="Created"
-                      value={formatDate(request.createdAt)}
-                      mono
-                    />
+                    <RequestField label={copy.shared.createdAt} value={formatDate(request.createdAt, locale)} mono />
                   </Grid>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
-                    <RequestField
-                      label="Updated"
-                      value={formatDate(request.updatedAt)}
-                      mono
-                    />
+                    <RequestField label={copy.shared.updatedAt} value={formatDate(request.updatedAt, locale)} mono />
                   </Grid>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
-                    <RequestField
-                      label="Delivery city"
-                      value={request.deliveryCity ?? '—'}
-                    />
+                    <RequestField label={copy.requests.detail.deliveryCity} value={request.deliveryCity ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
-                    <RequestField
-                      label="Delivery address"
-                      value={request.deliveryAddress ?? '—'}
-                    />
+                    <RequestField label={copy.requests.detail.deliveredTo} value={request.deliveryAddress ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
-                    <RequestField
-                      label="Item count"
-                      value={String(request.items.length)}
-                      mono
-                    />
+                    <RequestField label={copy.requests.columns.itemCount} value={String(request.items.length)} mono />
                   </Grid>
                 </Grid>
               </Stack>
@@ -247,23 +225,15 @@ export default function RequestDetailPage({
               <Card sx={{ height: '100%', borderColor: 'divider' }}>
                 <CardContent sx={{ p: 3 }}>
                   <Stack spacing={2.5}>
-                    <Typography variant="h6" sx={{ fontWeight: 700 }}>Company Info</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                      {copy.requests.detail.companyInfo}
+                    </Typography>
                     <Divider sx={{ borderColor: 'divider' }} />
-                    <RequestField label="Name" value={request.company.name} />
-                    <RequestField label="Status" value={request.company.status} />
-                    <RequestField
-                      label="Email"
-                      value={request.company.email ?? '—'}
-                    />
-                    <RequestField
-                      label="Phone"
-                      value={request.company.phone ?? '—'}
-                      mono
-                    />
-                    <RequestField
-                      label="City"
-                      value={request.company.city ?? '—'}
-                    />
+                    <RequestField label={copy.requests.columns.name} value={request.company.name} />
+                    <RequestField label={copy.shared.status} value={request.company.status} />
+                    <RequestField label={copy.requests.columns.email} value={request.company.email ?? '-'} />
+                    <RequestField label={copy.requests.columns.phone} value={request.company.phone ?? '-'} mono />
+                    <RequestField label={copy.requests.columns.city} value={request.company.city ?? '-'} />
                   </Stack>
                 </CardContent>
               </Card>
@@ -272,24 +242,17 @@ export default function RequestDetailPage({
               <Card sx={{ height: '100%', borderColor: 'divider' }}>
                 <CardContent sx={{ p: 3 }}>
                   <Stack spacing={2.5}>
-                    <Typography variant="h6" sx={{ fontWeight: 700 }}>Requested By</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                      {copy.requests.detail.requestedByInfo}
+                    </Typography>
                     <Divider sx={{ borderColor: 'divider' }} />
+                    <RequestField label={copy.requests.columns.name} value={request.requestedBy.name} />
+                    <RequestField label={copy.requests.columns.email} value={request.requestedBy.email} />
+                    <RequestField label={copy.requests.columns.role} value={request.requestedBy.role} />
+                    <RequestField label={copy.shared.status} value={request.requestedBy.status} />
                     <RequestField
-                      label="Name"
-                      value={request.requestedBy.name}
-                    />
-                    <RequestField
-                      label="Email"
-                      value={request.requestedBy.email}
-                    />
-                    <RequestField label="Role" value={request.requestedBy.role} />
-                    <RequestField
-                      label="Status"
-                      value={request.requestedBy.status}
-                    />
-                    <RequestField
-                      label="Company ID"
-                      value={request.requestedBy.companyId ?? '—'}
+                      label={copy.requests.columns.companyId}
+                      value={request.requestedBy.companyId ?? '-'}
                       mono
                     />
                   </Stack>
@@ -301,17 +264,19 @@ export default function RequestDetailPage({
           <Card sx={{ borderColor: 'divider' }}>
             <CardContent sx={{ p: 3 }}>
               <Stack spacing={2.5}>
-                <Typography variant="h6" sx={{ fontWeight: 700 }}>Items Registry</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                  {copy.requests.itemsTitle}
+                </Typography>
                 <TableContainer sx={{ border: '1px solid #e2e8f0', borderRadius: 1 }}>
                   <Table size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell>Item</TableCell>
-                        <TableCell>Description</TableCell>
-                        <TableCell align="right">Qty</TableCell>
-                        <TableCell>Unit</TableCell>
-                        <TableCell>Brand</TableCell>
-                        <TableCell align="right">Budget</TableCell>
+                        <TableCell>{copy.requests.columns.item}</TableCell>
+                        <TableCell>{copy.requests.columns.description}</TableCell>
+                        <TableCell align="right">{copy.requests.columns.qty}</TableCell>
+                        <TableCell>{copy.requests.columns.unit}</TableCell>
+                        <TableCell>{copy.requests.columns.brand}</TableCell>
+                        <TableCell align="right">{copy.requests.columns.budget}</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -319,10 +284,7 @@ export default function RequestDetailPage({
                         <TableRow key={item.id}>
                           <TableCell>
                             <Stack spacing={0.25}>
-                              <Typography
-                                variant="body2"
-                                sx={{ fontWeight: 700, color: '#0f172a' }}
-                              >
+                              <Typography variant="body2" sx={{ fontWeight: 700, color: '#0f172a' }}>
                                 {item.name}
                               </Typography>
                               <Typography variant="caption" sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
@@ -330,11 +292,15 @@ export default function RequestDetailPage({
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell>{item.description ?? '—'}</TableCell>
-                          <TableCell align="right" sx={{ fontFamily: 'monospace', fontWeight: 600, color: '#0f172a' }}>{item.quantity}</TableCell>
+                          <TableCell>{item.description ?? '-'}</TableCell>
+                          <TableCell align="right" sx={{ fontFamily: 'monospace', fontWeight: 600, color: '#0f172a' }}>
+                            {item.quantity}
+                          </TableCell>
                           <TableCell sx={{ fontWeight: 500 }}>{item.unit}</TableCell>
-                          <TableCell>{item.preferredBrand ?? '—'}</TableCell>
-                          <TableCell align="right" sx={{ fontFamily: 'monospace', fontWeight: 600, color: '#0f172a' }}>{item.estimatedBudget ?? '—'}</TableCell>
+                          <TableCell>{item.preferredBrand ?? '-'}</TableCell>
+                          <TableCell align="right" sx={{ fontFamily: 'monospace', fontWeight: 600, color: '#0f172a' }}>
+                            {item.estimatedBudget ?? '-'}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -344,22 +310,25 @@ export default function RequestDetailPage({
             </CardContent>
           </Card>
 
-          {/* Activity / Timeline Placeholder */}
           <Card sx={{ borderColor: 'divider' }}>
             <CardContent sx={{ p: 3 }}>
               <Stack spacing={2.5}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                   <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                    Request Activity History
+                    {copy.requests.detail.requestHistoryTitle}
                   </Typography>
-                  <Chip label="Demo Logs Only" size="small" sx={{ bgcolor: '#fef3c7', color: '#b45309', fontWeight: 600, borderRadius: 0.5 }} />
+                  <Chip
+                    label={copy.requests.detail.requestHistoryBadge}
+                    size="small"
+                    sx={{ bgcolor: '#fef3c7', color: '#b45309', fontWeight: 600, borderRadius: 0.5 }}
+                  />
                 </Stack>
                 <Divider sx={{ borderColor: 'divider' }} />
                 <Stack spacing={2}>
                   {[
-                    { title: 'Request Converted to Sourcing', desc: 'Sourcing manager assigned the RFQ to qualified vendor pool.', time: 'July 10, 2026 10:15 AM' },
-                    { title: 'Needs Review Flag Cleared', desc: 'Admin cleared flag after verifying delivery coordinates.', time: 'July 09, 2026 04:30 PM' },
-                    { title: 'Request Created', desc: 'Initial payload received from API gateway.', time: 'July 09, 2026 09:12 AM' },
+                    { title: copy.requests.detail.requestConverted, desc: copy.requests.detail.requestConvertedDesc, time: copy.requests.detail.requestConvertedTime },
+                    { title: copy.requests.detail.reviewCleared, desc: copy.requests.detail.reviewClearedDesc, time: copy.requests.detail.reviewClearedTime },
+                    { title: copy.requests.detail.requestCreated, desc: copy.requests.detail.requestCreatedDesc, time: copy.requests.detail.requestCreatedTime },
                   ].map((log, idx) => (
                     <Box key={idx}>
                       {idx > 0 && <Divider sx={{ my: 1.5 }} />}
@@ -387,7 +356,9 @@ export default function RequestDetailPage({
             <Card sx={{ borderColor: 'divider' }}>
               <CardContent sx={{ p: 3 }}>
                 <Stack spacing={1.5}>
-                  <Typography variant="h6" sx={{ fontWeight: 700 }}>Internal Notes</Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                    {copy.requests.internalNotesTitle}
+                  </Typography>
                   <Divider sx={{ borderColor: 'divider' }} />
                   <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.5 }}>
                     {request.internalNotes}

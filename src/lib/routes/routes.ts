@@ -13,41 +13,13 @@ export const routes = {
     adminSuppliers: '/admin/suppliers',
   },
   modules: [
-    {
-      slug: 'requests',
-      label: 'Requests',
-      description: 'Capture and review incoming request activity.',
-    },
-    {
-      slug: 'suppliers',
-      label: 'Suppliers',
-      description: 'Track vendors, contacts, and qualification status.',
-    },
-    {
-      slug: 'quotations',
-      label: 'Quotations',
-      description: 'Manage quote review, comparison, and approval.',
-    },
-    {
-      slug: 'orders',
-      label: 'Orders',
-      description: 'Follow order progress through fulfillment.',
-    },
-    {
-      slug: 'payments',
-      label: 'Payments',
-      description: 'Monitor payments and reconciliation tasks.',
-    },
-    {
-      slug: 'deliveries',
-      label: 'Deliveries',
-      description: 'Track shipment handoff and delivery milestones.',
-    },
-    {
-      slug: 'invoices',
-      label: 'Invoices',
-      description: 'Review invoice issuance and status.',
-    },
+    { slug: 'requests' },
+    { slug: 'suppliers' },
+    { slug: 'quotations' },
+    { slug: 'orders' },
+    { slug: 'payments' },
+    { slug: 'deliveries' },
+    { slug: 'invoices' },
   ],
 } as const;
 

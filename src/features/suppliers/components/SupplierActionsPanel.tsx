@@ -3,12 +3,10 @@
 import { useState } from 'react';
 import { Alert, Box, Button, Card, CardContent, Stack, Typography } from '@mui/material';
 import { ApiError } from '@/lib/api/api-error';
+import { getMessageBundle } from '@/lib/i18n/messages';
+import { useLocaleStore } from '@/lib/i18n/locale.store';
 import { createSupplier, updateSupplier, updateSupplierStatus } from '../suppliers.api';
-import type {
-  SupplierRecord,
-  SupplierStatus,
-  SupplierUpsertPayload,
-} from '../suppliers.types';
+import type { SupplierRecord, SupplierStatus, SupplierUpsertPayload } from '../suppliers.types';
 import { SupplierFormDialog } from './SupplierFormDialog';
 import { SupplierStatusDialog } from './SupplierStatusDialog';
 
@@ -23,6 +21,8 @@ export function SupplierActionsPanel({
   onMutationSuccess,
   context,
 }: SupplierActionsPanelProps) {
+  const locale = useLocaleStore((state) => state.locale);
+  const copy = getMessageBundle(locale);
   const [createOpen, setCreateOpen] = useState(false);
   const [createSession, setCreateSession] = useState(0);
   const [editOpen, setEditOpen] = useState(false);
@@ -41,10 +41,7 @@ export function SupplierActionsPanel({
 
     try {
       await createSupplier(payload);
-      setFeedback({
-        type: 'success',
-        message: 'Supplier created successfully.',
-      });
+      setFeedback({ type: 'success', message: copy.suppliers.list.createSuccess });
       setCreateOpen(false);
       onMutationSuccess();
     } catch (mutationError) {
@@ -55,7 +52,7 @@ export function SupplierActionsPanel({
             ? mutationError.message
             : mutationError instanceof Error
               ? mutationError.message
-              : 'Unable to create supplier.',
+              : copy.suppliers.errors.createFailed,
       });
     } finally {
       setIsSubmitting(false);
@@ -72,10 +69,7 @@ export function SupplierActionsPanel({
 
     try {
       await updateSupplier(supplier.id, payload);
-      setFeedback({
-        type: 'success',
-        message: 'Supplier updated successfully.',
-      });
+      setFeedback({ type: 'success', message: copy.suppliers.list.updateSuccess });
       setEditOpen(false);
       onMutationSuccess();
     } catch (mutationError) {
@@ -86,7 +80,7 @@ export function SupplierActionsPanel({
             ? mutationError.message
             : mutationError instanceof Error
               ? mutationError.message
-              : 'Unable to update supplier.',
+              : copy.suppliers.errors.updateFailed,
       });
     } finally {
       setIsSubmitting(false);
@@ -105,7 +99,7 @@ export function SupplierActionsPanel({
       await updateSupplierStatus(supplier.id, { status });
       setFeedback({
         type: 'success',
-        message: `Supplier status updated to ${status}.`,
+        message: copy.suppliers.list.statusUpdated.replace('{status}', copy.suppliers.statuses[status]),
       });
       setStatusOpen(false);
       onMutationSuccess();
@@ -117,7 +111,7 @@ export function SupplierActionsPanel({
             ? mutationError.message
             : mutationError instanceof Error
               ? mutationError.message
-              : 'Unable to update supplier status.',
+              : copy.suppliers.errors.statusFailed,
       });
     } finally {
       setIsSubmitting(false);
@@ -130,10 +124,10 @@ export function SupplierActionsPanel({
         <Stack spacing={2.5}>
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 800 }}>
-              Supplier Actions
+              {copy.suppliers.list.supplierActionsTitle}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-              Create, edit, and status actions are backed by the live admin API.
+              {copy.suppliers.list.actionSummary}
             </Typography>
           </Box>
 
@@ -153,7 +147,7 @@ export function SupplierActionsPanel({
                 variant="contained"
                 disabled={isSubmitting}
               >
-                Add Supplier
+                {copy.suppliers.addSupplier}
               </Button>
             ) : null}
             {supplier ? (
@@ -166,7 +160,7 @@ export function SupplierActionsPanel({
                   variant="outlined"
                   disabled={isSubmitting}
                 >
-                  Edit Supplier
+                  {copy.suppliers.editSupplier}
                 </Button>
                 <Button
                   onClick={() => {
@@ -176,14 +170,14 @@ export function SupplierActionsPanel({
                   variant="outlined"
                   disabled={isSubmitting}
                 >
-                  Change Status
+                  {copy.suppliers.changeStatus}
                 </Button>
               </>
             ) : null}
           </Stack>
 
           <Typography variant="caption" color="text.secondary">
-            Mutations are submitted only after backend success, and the list/detail views refresh automatically.
+            {copy.suppliers.list.mutationSummary}
           </Typography>
         </Stack>
       </CardContent>
@@ -192,8 +186,8 @@ export function SupplierActionsPanel({
         key={`create-${createSession}`}
         open={createOpen}
         mode="create"
-        title="Add Supplier"
-        description="Create a new supplier record using the backend-supported supplier fields and contacts payload."
+        title={copy.suppliers.list.createTitle}
+        description={copy.suppliers.list.createDescription}
         loading={isSubmitting}
         onClose={() => setCreateOpen(false)}
         onSubmit={handleCreate}
@@ -203,8 +197,8 @@ export function SupplierActionsPanel({
         key={`edit-${editSession}-${supplier?.id ?? 'none'}`}
         open={editOpen}
         mode="edit"
-        title="Edit Supplier"
-        description="Update the supplier's basic details and contacts using the live admin API."
+        title={copy.suppliers.list.editTitle}
+        description={copy.suppliers.list.editDescription}
         initialSupplier={supplier}
         loading={isSubmitting}
         onClose={() => setEditOpen(false)}

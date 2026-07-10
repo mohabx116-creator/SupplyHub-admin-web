@@ -3,6 +3,7 @@ import { routes } from '@/lib/routes/routes';
 import type {
   ListRequestsParams,
   RequestRecord,
+  UpdateRequestStatusPayload,
 } from './requests.types';
 
 const buildParams = (params?: ListRequestsParams) => {
@@ -29,4 +30,14 @@ export const getRequestById = async (id: string): Promise<RequestRecord> =>
   request<RequestRecord>({
     method: 'GET',
     url: `${routes.api.adminRequests}/${id}`,
+  });
+
+export const updateRequestStatus = async (
+  id: string,
+  payload: UpdateRequestStatusPayload,
+): Promise<RequestRecord> =>
+  request<RequestRecord>({
+    method: 'PATCH',
+    url: `${routes.api.adminRequests}/${id}/status`,
+    data: payload,
   });

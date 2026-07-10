@@ -69,3 +69,15 @@ export type ListRequestsParams = {
   status?: RequestStatus;
   companyId?: string;
 };
+
+export type UpdateRequestStatusPayload = {
+  status: RequestStatus;
+};
+
+export type RequestActionKey =
+  | 'MARK_NEEDS_REVIEW'
+  | 'REQUEST_CLARIFICATION'
+  | 'MARK_READY_FOR_SOURCING'
+  | 'START_SOURCING'
+  | 'CANCEL_REQUEST'
+  | 'CONVERT_TO_ORDER';

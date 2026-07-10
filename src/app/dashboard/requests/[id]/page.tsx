@@ -20,6 +20,7 @@ import {
   Typography,
 } from '@mui/material';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { RequestActionsPanel } from '@/features/requests/components/RequestActionsPanel';
 import { RequestStatusChip } from '@/features/requests/components/RequestStatusChip';
 import { RequestsErrorState } from '@/features/requests/components/RequestsErrorState';
 import { getRequestById } from '@/features/requests/requests.api';
@@ -160,6 +161,12 @@ export default function RequestDetailPage({
 
       {!isLoading && !error && request ? (
         <Stack spacing={3}>
+          <RequestActionsPanel
+            requestId={request.id}
+            currentStatus={request.status}
+            onActionSuccess={handleRefresh}
+          />
+
           <Card>
             <CardContent>
               <Stack spacing={2.5}>
@@ -182,7 +189,8 @@ export default function RequestDetailPage({
                   <RequestStatusChip status={request.status} />
                 </Stack>
 
-                <Divider />                <Grid container spacing={2.5}>
+                <Divider />
+                <Grid container spacing={2.5}>
                   <Grid size={{ xs: 12, md: 6, lg: 3 }}>
                     <RequestField label="Request ID" value={request.id} mono />
                   </Grid>

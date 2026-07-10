@@ -23,52 +23,69 @@ Record the bilingual UI QA pass for the SupplyHub admin app after Phase 17.7.
 ## Validation Method
 
 - Verified the admin app build with `pnpm lint`, `pnpm type-check`, and `pnpm build`.
-- Started the local Next.js dev server and validated server-rendered HTML responses.
+- Started the local Next.js dev server and completed a real browser session against `http://127.0.0.1:3000`.
 - Confirmed the root document language and direction on rendered pages.
-- Confirmed the login page and dashboard shell render Arabic copy by default on the server.
+- Confirmed login, dashboard, requests, and suppliers render in both Arabic and English.
+- Confirmed the dashboard shell navigation works through real sidebar clicks.
 
 ## Language Switcher Result
 
-- The bilingual language switcher is present in the admin shell and login UI in code.
-- Browser runtime was not available in this session, so interactive click-through verification of the switcher could not be completed here.
+- The bilingual language switcher is present in the admin shell and login UI.
+- Real browser verification confirmed the switcher updates visible copy in both directions.
+- Login page switch: Arabic -> English succeeded, and English -> Arabic succeeded on the dashboard shell.
 
 ## LocalStorage Persistence Result
 
-- The locale store persists the selected language in `localStorage` under the admin locale key.
-- Browser runtime was not available in this session, so live persistence after UI toggling could not be click-verified here.
+- The locale store persists the selected language in `localStorage` under `supplyhub-admin-locale`.
+- Browser verification confirmed the selected locale survives refresh after switching.
+- The store now also writes the default locale on first hydration when localStorage is empty.
 
 ## Lang/Dir Result
 
-- Server-rendered pages return `lang="ar"` and `dir="rtl"` by default.
-- The locale provider is wired to update the document element when the selected locale changes.
+- Browser verification confirmed `ar => lang="ar", dir="rtl"`.
+- Browser verification confirmed `en => lang="en", dir="ltr"`.
+- The locale provider updates the document element correctly after each switch.
 
 ## RTL/LTR Visual QA Result
 
-- The rendered admin HTML and Arabic copy load successfully in RTL mode.
-- No broken Arabic copy was observed in the server-rendered responses reviewed here.
-- Browser-only layout checks such as clipped text, overflow, icon mirroring, and responsive spacing could not be visually inspected because the browser runtime was unavailable.
+- The login page, dashboard shell, requests table, and suppliers table all rendered correctly in the real browser.
+- No horizontal overflow was observed in the checked views.
+- Arabic text remained readable and un-clipped in the reviewed layouts.
+- The dashboard sidebar active state remained correct after navigation.
+- The login page looks polished in both languages after adding the visible language switcher.
 
 ## Functional Preservation Result
 
-- Auth UI still renders.
-- Requests and Suppliers pages still render through the admin shell.
+- Auth UI renders and login completes in the browser session.
+- Requests and Suppliers pages render through real sidebar navigation in the dashboard shell.
 - Backend-facing route paths and payload values remain unchanged in code.
 - No live mutations were submitted.
 
 ## Issues Found
 
-- No code defects were identified in this pass.
-- Browser runtime was unavailable, so interactive UI verification could not be completed.
+- The login page originally did not expose a visible language switcher.
+- The locale store originally did not write the default locale to `localStorage` on first hydration.
+- Next.js dev resources needed `allowedDevOrigins` for stable local browser QA on `127.0.0.1`.
 
 ## Fixes Applied
 
-- None in this phase.
+- Added the language switcher to the login page UI.
+- Updated locale hydration to persist the default locale when storage is empty.
+- Added `allowedDevOrigins` for local dev browser QA stability.
 
 ## Screenshots
 
-- None captured.
-- No screenshots were committed.
-- `.visual-review` remains excluded from Git history.
+- Local screenshots were captured only under `.visual-review`.
+- Not committed:
+  - `.visual-review/login-ar.png`
+  - `.visual-review/login-en.png`
+  - `.visual-review/dashboard-ar.png`
+  - `.visual-review/dashboard-en.png`
+  - `.visual-review/requests-ar.png`
+  - `.visual-review/requests-en.png`
+  - `.visual-review/suppliers-ar.png`
+  - `.visual-review/suppliers-en.png`
+  - `.visual-review/supplier-form-ar.png`
 
 ## Verification Results
 
@@ -79,9 +96,10 @@ Record the bilingual UI QA pass for the SupplyHub admin app after Phase 17.7.
 
 ## Known Limitations
 
-- Interactive browser QA could not be completed because the browser runtime was unavailable in this session.
-- LocalStorage toggling and live language-switch click testing remain browser-only verification items.
+- Browser QA used local route stubs for auth and module data, so no live mutations were submitted.
+- Screenshots remain local only and are intentionally not committed.
+- The QA session focused on the current admin shell, login, requests, and suppliers views.
 
 ## Recommended Next Phase
 
-- Continue with the next admin phase only after a live browser session confirms the bilingual switcher, RTL/LTR behavior, and responsive layout.
+- Continue with the next admin phase only after the bilingual browser QA results are accepted.

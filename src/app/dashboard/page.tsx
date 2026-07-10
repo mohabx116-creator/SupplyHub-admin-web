@@ -191,7 +191,7 @@ export default function DashboardPage() {
                         <ListItem disableGutters sx={{ py: 0.5, alignItems: 'flex-start' }}>
                           <ListItemText
                             primary={
-                              <Typography variant="body2" sx={{ fontWeight: 600, color: '#0f172a' }}>
+                              <Typography component="span" variant="body2" sx={{ fontWeight: 600, color: '#0f172a' }}>
                                 {act.text}
                               </Typography>
                             }
@@ -208,6 +208,7 @@ export default function DashboardPage() {
                                 />
                               </Stack>
                             }
+                            secondaryTypographyProps={{ component: 'div' }}
                           />
                         </ListItem>
                       </Box>

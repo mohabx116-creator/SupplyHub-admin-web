@@ -29,8 +29,12 @@ export const useLocaleStore = create<LocaleStore>((set, get) => ({
     }
 
     const storedLocale = window.localStorage.getItem(storageKey);
+    const nextLocale = isLocale(storedLocale) ? storedLocale : defaultLocale;
+    if (!storedLocale) {
+      window.localStorage.setItem(storageKey, nextLocale);
+    }
     set({
-      locale: isLocale(storedLocale) ? storedLocale : defaultLocale,
+      locale: nextLocale,
       hydrated: true,
     });
   },

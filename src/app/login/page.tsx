@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { RequirePublic } from '@/components/auth/RequirePublic';
+import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
 import { login } from '@/features/auth/auth.api';
 import { useAuthStore } from '@/features/auth/auth.store';
 import { ApiError } from '@/lib/api/api-error';
@@ -146,128 +147,133 @@ function LoginForm() {
           py: 6,
         }}
       >
-        <Card
-          sx={{
-            width: '100%',
-            maxWidth: 460,
-            borderRadius: 1,
-            boxShadow:
-              '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05)',
-            bgcolor: '#ffffff',
-            border: '1px solid #e2e8f0',
-          }}
-        >
-          <CardContent sx={{ p: { xs: 4, sm: 5 } }}>
-            <Stack spacing={4}>
-              <Box>
-                <Stack
-                  direction="row"
-                  spacing={1.5}
-                  alignItems="center"
-                  sx={{ display: { xs: 'flex', md: 'none' }, mb: 3 }}
-                >
-                  <Box
-                    sx={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: 1,
-                      display: 'grid',
-                      placeItems: 'center',
-                      background: '#f59e0b',
-                      color: '#0f172a',
-                      fontWeight: 800,
-                    }}
+        <Stack spacing={2} sx={{ width: '100%', maxWidth: 460 }}>
+          <Box sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
+            <LanguageSwitcher />
+          </Box>
+
+          <Card
+            sx={{
+              width: '100%',
+              borderRadius: 1,
+              boxShadow:
+                '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05)',
+              bgcolor: '#ffffff',
+              border: '1px solid #e2e8f0',
+            }}
+          >
+            <CardContent sx={{ p: { xs: 4, sm: 5 } }}>
+              <Stack spacing={4}>
+                <Box>
+                  <Stack
+                    direction="row"
+                    spacing={1.5}
+                    alignItems="center"
+                    sx={{ display: { xs: 'flex', md: 'none' }, mb: 3 }}
                   >
-                    SH
-                  </Box>
+                    <Box
+                      sx={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: 1,
+                        display: 'grid',
+                        placeItems: 'center',
+                        background: '#f59e0b',
+                        color: '#0f172a',
+                        fontWeight: 800,
+                      }}
+                    >
+                      SH
+                    </Box>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ fontWeight: 800, letterSpacing: '0.05em', color: '#0f172a' }}
+                    >
+                      SUPPLYHUB
+                    </Typography>
+                  </Stack>
+
                   <Typography
-                    variant="subtitle2"
-                    sx={{ fontWeight: 800, letterSpacing: '0.05em', color: '#0f172a' }}
+                    variant="overline"
+                    color="text.secondary"
+                    sx={{ fontWeight: 600, letterSpacing: '0.05em' }}
                   >
-                    SUPPLYHUB
+                    {copy.auth.secureAccess}
                   </Typography>
+                  <Typography
+                    variant="h4"
+                    sx={{ fontWeight: 700, mt: 0.5, letterSpacing: '-0.02em', color: '#0f172a' }}
+                  >
+                    {copy.auth.pageTitle}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1, lineHeight: 1.5 }}>
+                    {copy.auth.subtitle}
+                  </Typography>
+                </Box>
+
+                <Stack component="form" spacing={3} onSubmit={handleSubmit}>
+                  <TextField
+                    label={copy.auth.emailLabel}
+                    type="email"
+                    name="email"
+                    autoComplete="email"
+                    fullWidth
+                    required
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    InputLabelProps={{ sx: { fontWeight: 500 } }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&:hover fieldset': {
+                          borderColor: '#0f172a',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#f59e0b',
+                        },
+                      },
+                    }}
+                  />
+                  <TextField
+                    label={copy.auth.passwordLabel}
+                    type="password"
+                    name="password"
+                    autoComplete="current-password"
+                    fullWidth
+                    required
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    InputLabelProps={{ sx: { fontWeight: 500 } }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&:hover fieldset': {
+                          borderColor: '#0f172a',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#f59e0b',
+                        },
+                      },
+                    }}
+                  />
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    disabled={isSubmitting}
+                    sx={{ py: 1.5, fontSize: '0.95rem' }}
+                  >
+                    {isSubmitting ? copy.auth.submitting : copy.auth.submit}
+                  </Button>
                 </Stack>
 
-                <Typography
-                  variant="overline"
-                  color="text.secondary"
-                  sx={{ fontWeight: 600, letterSpacing: '0.05em' }}
-                >
-                  {copy.auth.secureAccess}
-                </Typography>
-                <Typography
-                  variant="h4"
-                  sx={{ fontWeight: 700, mt: 0.5, letterSpacing: '-0.02em', color: '#0f172a' }}
-                >
-                  {copy.auth.pageTitle}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 1, lineHeight: 1.5 }}>
-                {copy.auth.subtitle}
-                </Typography>
-              </Box>
-
-              <Stack component="form" spacing={3} onSubmit={handleSubmit}>
-                <TextField
-                  label={copy.auth.emailLabel}
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  fullWidth
-                  required
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  InputLabelProps={{ sx: { fontWeight: 500 } }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '&:hover fieldset': {
-                        borderColor: '#0f172a',
-                      },
-                      '&.Mui-focused fieldset': {
-                        borderColor: '#f59e0b',
-                      },
-                    },
-                  }}
-                />
-                <TextField
-                  label={copy.auth.passwordLabel}
-                  type="password"
-                  name="password"
-                  autoComplete="current-password"
-                  fullWidth
-                  required
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  InputLabelProps={{ sx: { fontWeight: 500 } }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '&:hover fieldset': {
-                        borderColor: '#0f172a',
-                      },
-                      '&.Mui-focused fieldset': {
-                        borderColor: '#f59e0b',
-                      },
-                    },
-                  }}
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  disabled={isSubmitting}
-                  sx={{ py: 1.5, fontSize: '0.95rem' }}
-                >
-                  {isSubmitting ? copy.auth.submitting : copy.auth.submit}
-                </Button>
+                {error ? (
+                  <Alert severity="error" sx={{ borderRadius: 1, fontWeight: 500 }}>
+                    {error}
+                  </Alert>
+                ) : null}
               </Stack>
-
-              {error ? (
-                <Alert severity="error" sx={{ borderRadius: 1, fontWeight: 500 }}>
-                  {error}
-                </Alert>
-              ) : null}
-            </Stack>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Stack>
       </Box>
     </Box>
   );

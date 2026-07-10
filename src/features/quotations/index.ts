@@ -1,1 +1,2 @@
-export type QuotationsFeaturePlaceholder = unknown;
+export * from './quotations.api';
+export * from './quotations.types';

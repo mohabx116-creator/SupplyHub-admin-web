@@ -398,6 +398,96 @@ export const arCopy = {
         'لا يتم إرسال التغييرات إلا بعد نجاح الخادم، ثم تُحدّث القوائم والتفاصيل تلقائيًا.',
     },
   },
+  quotations: {
+    listTitle: 'عروض الأسعار',
+    listDescription:
+      'راجع عروض الأسعار الخاصة بطلب التوريد المحدد وقارن بين سجلات الخادم الفعلية.',
+    filterSectionTitle: 'تصفية عروض الأسعار',
+    filterSectionDescription:
+      'صف حسب حالة العرض أو معرّف المورد للطلب المحدد حالياً.',
+    requestSelectorLabel: 'طلب التوريد',
+    requestSelectorHelper:
+      'عروض الأسعار مرتبطة بطلب معيّن، لذا يجب اختيار طلب قبل تحميل القائمة.',
+    selectedRequestLabel: 'الطلب المختار',
+    selectedRequestHelper: 'يعرض الجدول التالي العروض المرتبطة بالطلب المختار.',
+    statusLabel: 'الحالة',
+    allStatuses: 'كل الحالات',
+    supplierIdLabel: 'معرّف المورد',
+    supplierIdPlaceholder: 'أدخل UUID المورد',
+    applyFilters: 'تطبيق التصفية',
+    clearFilters: 'مسح التصفية',
+    refresh: 'تحديث',
+    noRequestsTitle: 'لا توجد طلبات توريد متاحة',
+    noRequestsDescription:
+      'وحدة عروض الأسعار مرتبطة بطلب معيّن، لكن لا توجد طلبات توريد متاحة للمراجعة بعد.',
+    noQuotationsTitle: 'لا توجد عروض أسعار',
+    noQuotationsDescription:
+      'لا توجد عروض أسعار مسجلة لهذا الطلب في الخادم بعد.',
+    errors: {
+      loadFailed: 'تعذر تحميل عروض الأسعار في الوقت الحالي.',
+      loadRequestsFailed: 'تعذر تحميل طلبات التوريد الحالية.',
+      detailLoadFailed: 'تعذر تحميل تفاصيل عرض السعر الحالية.',
+    },
+    statuses: {
+      DRAFT: 'مسودة',
+      RECEIVED: 'تم الاستلام',
+      SELECTED: 'تم اختياره',
+      REJECTED: 'مرفوض',
+      EXPIRED: 'منتهي الصلاحية',
+      CANCELLED: 'ملغي',
+    },
+    columns: {
+      quotation: 'عرض السعر',
+      supplier: 'المورد',
+      request: 'الطلب',
+      status: 'الحالة',
+      total: 'الإجمالي',
+      expiry: 'تاريخ انتهاء العرض',
+      updated: 'آخر تحديث',
+      created: 'تاريخ الإنشاء',
+      subtotal: 'المجموع الفرعي',
+      shippingCost: 'تكلفة الشحن',
+      taxAmount: 'الضريبة',
+      discountAmount: 'الخصم',
+      grandTotal: 'الإجمالي النهائي',
+      currency: 'العملة',
+      leadTimeDays: 'مدة التنفيذ',
+      quotationId: 'معرّف العرض',
+      requestId: 'معرّف الطلب',
+      supplierId: 'معرّف المورد',
+      company: 'الشركة',
+      supplierLegalName: 'الاسم القانوني',
+      supplierEmail: 'البريد الإلكتروني',
+      supplierPhone: 'الهاتف',
+      supplierWhatsApp: 'واتساب',
+      supplierCity: 'المدينة',
+      supplierAddress: 'العنوان',
+      supplierTaxNumber: 'الرقم الضريبي',
+      requestStatus: 'حالة الطلب',
+      quantity: 'الكمية',
+      unit: 'الوحدة',
+      unitPrice: 'سعر الوحدة',
+      lineTotal: 'إجمالي السطر',
+      item: 'البند',
+      description: 'الوصف',
+      notes: 'ملاحظات',
+      requestCompany: 'شركة الطلب',
+    },
+    detailTitle: 'تفاصيل عرض السعر',
+    detailDescription:
+      'راجع عرض السعر المقدم من المورد، والطلب المرتبط، وملف المورد، وبنود التسعير من الخادم المباشر.',
+    backToList: 'العودة إلى عروض الأسعار',
+    openRequest: 'فتح الطلب',
+    quotationSummaryTitle: 'ملخص العرض',
+    requestSummaryTitle: 'الطلب المرتبط',
+    supplierSummaryTitle: 'ملف المورد',
+    lineItemsTitle: 'بنود التسعير',
+    noNotes: 'لا توجد ملاحظات',
+    noLineItems: 'لا توجد بنود مسجلة في هذا العرض',
+    leadTimeLabel: 'مدة التنفيذ',
+    validUntilLabel: 'صالح حتى',
+    noValidUntil: 'لا يوجد تاريخ انتهاء مسجل',
+  },
 };
 
 export const requestStatusLabels = arCopy.requests.requestStatuses;
@@ -408,3 +498,9 @@ export const getRequestStatusLabel = (status: keyof typeof requestStatusLabels) 
 
 export const getSupplierStatusLabel = (status: keyof typeof supplierStatusLabels) =>
   supplierStatusLabels[status];
+
+export const quotationStatusLabels = arCopy.quotations.statuses;
+
+export const getQuotationStatusLabel = (
+  status: keyof typeof quotationStatusLabels,
+) => quotationStatusLabels[status];

@@ -1,1 +1,2 @@
-export type DeliveriesFeaturePlaceholder = unknown;
+export * from './deliveries.api';
+export * from './deliveries.types';

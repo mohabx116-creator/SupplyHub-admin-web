@@ -1,1 +1,2 @@
-export type PaymentsFeaturePlaceholder = unknown;
+export * from './payments.api';
+export * from './payments.types';

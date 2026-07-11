@@ -6,6 +6,7 @@ export const routes = {
   suppliers: '/dashboard/suppliers',
   quotations: '/dashboard/quotations',
   orders: '/dashboard/orders',
+  payments: '/dashboard/payments',
   auth: {
     login: '/auth/login',
     me: '/auth/me',
@@ -15,6 +16,7 @@ export const routes = {
     adminSuppliers: '/admin/suppliers',
     adminSupplierQuotations: '/admin/supplier-quotations',
     adminOrders: '/admin/orders',
+    adminPayments: '/admin/payments',
   },
   modules: [
     { slug: 'requests' },
@@ -36,6 +38,8 @@ export const getSupplierRoute = (id: string) => `${routes.suppliers}/${id}`;
 export const getQuotationRoute = (id: string) => `${routes.quotations}/${id}`;
 
 export const getOrderRoute = (id: string) => `${routes.orders}/${id}`;
+
+export const getPaymentRoute = (id: string) => `${routes.payments}/${id}`;
 
 export const getModuleBySlug = (slug: string) =>
   routes.modules.find((module) => module.slug === slug);

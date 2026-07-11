@@ -47,7 +47,7 @@ const getPageTitle = (pathname: string, locale: 'ar' | 'en') => {
     return copy.suppliers.listTitle;
   }
 
-  const moduleSlug = pathname.split('/').at(-1);
+  const moduleSlug = pathname.split('/')[2];
   const moduleConfig = moduleSlug ? routes.modules.find((module) => module.slug === moduleSlug) : undefined;
 
   if (moduleConfig) {

@@ -8,6 +8,7 @@ export const routes = {
   orders: '/dashboard/orders',
   payments: '/dashboard/payments',
   deliveries: '/dashboard/deliveries',
+  invoices: '/dashboard/invoices',
   auth: {
     login: '/auth/login',
     me: '/auth/me',
@@ -19,6 +20,7 @@ export const routes = {
     adminOrders: '/admin/orders',
     adminPayments: '/admin/payments',
     adminDeliveries: '/admin/deliveries',
+    adminInvoices: '/admin/invoices',
   },
   modules: [
     { slug: 'requests' },
@@ -44,6 +46,8 @@ export const getOrderRoute = (id: string) => `${routes.orders}/${id}`;
 export const getPaymentRoute = (id: string) => `${routes.payments}/${id}`;
 
 export const getDeliveryRoute = (id: string) => `${routes.deliveries}/${id}`;
+
+export const getInvoiceRoute = (id: string) => `${routes.invoices}/${id}`;
 
 export const getModuleBySlug = (slug: string) =>
   routes.modules.find((module) => module.slug === slug);
